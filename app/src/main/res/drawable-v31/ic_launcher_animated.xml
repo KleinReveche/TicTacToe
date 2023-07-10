@@ -1,0 +1,88 @@
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="vector"
+            android:width="24dp"
+            android:height="24dp"
+            android:viewportWidth="24"
+            android:viewportHeight="24">
+            <group
+                android:name="group"
+                android:pivotX="12"
+                android:pivotY="12"
+                android:scaleX="0.81"
+                android:scaleY="0.81">
+                <path
+                    android:name="path"
+                    android:pathData="M 10.18 10.84 C 10.035 10.84 9.891 10.785 9.781 10.672 L 4.973 5.867 C 4.754 5.648 4.754 5.293 4.973 5.074 C 5.191 4.855 5.547 4.855 5.766 5.074 L 10.574 9.879 C 10.797 10.098 10.797 10.453 10.574 10.672 C 10.465 10.781 10.324 10.836 10.18 10.836 L 10.18 10.84 Z M 10.18 10.84 M 7.773 19.848 C 5.707 19.848 4.023 18.164 4.023 16.098 C 4.023 14.031 5.707 12.348 7.773 12.348 C 9.844 12.348 11.527 14.031 11.527 16.098 C 11.527 18.164 9.844 19.848 7.773 19.848 Z M 7.773 13.473 C 6.324 13.473 5.145 14.648 5.145 16.098 C 5.145 17.547 6.324 18.727 7.773 18.727 C 9.223 18.727 10.402 17.547 10.402 16.098 C 10.402 14.648 9.223 13.473 7.773 13.473 Z M 7.773 13.473 M 18.637 19.063 C 18.492 19.063 18.352 19.008 18.242 18.898 L 13.43 14.094 C 13.211 13.871 13.211 13.52 13.43 13.301 C 13.652 13.078 14.008 13.078 14.227 13.301 L 19.035 18.105 C 19.254 18.324 19.254 18.68 19.035 18.898 C 18.926 19.008 18.781 19.063 18.637 19.063 Z M 18.637 19.063"
+                    android:strokeWidth="1">
+                    <aapt:attr name="android:fillColor">
+                        <gradient
+                            android:endX="108"
+                            android:endY="108"
+                            android:startX="-2.75"
+                            android:startY="-1.75"
+                            android:type="linear">
+                            <item
+                                android:color="@android:color/system_accent1_300"
+                                android:offset="0.02" />
+                            <item
+                                android:color="@android:color/system_accent1_600"
+                                android:offset="0.99" />
+                        </gradient>
+                    </aapt:attr>
+                </path>
+            </group>
+            <group
+                android:name="group_1"
+                android:pivotX="12"
+                android:pivotY="12"
+                android:scaleX="0.81"
+                android:scaleY="0.81">
+                <path
+                    android:name="path_1"
+                    android:pathData="M 13.828 19.063 C 13.684 19.063 13.539 19.008 13.43 18.898 C 13.211 18.68 13.211 18.324 13.43 18.105 L 18.242 13.301 C 18.461 13.078 18.816 13.078 19.035 13.301 C 19.254 13.52 19.254 13.875 19.035 14.094 L 14.227 18.898 C 14.117 19.008 13.973 19.063 13.828 19.063 Z M 13.828 19.063 M 16.234 11.621 C 14.164 11.621 12.48 9.941 12.48 7.875 C 12.48 5.809 14.164 4.125 16.234 4.125 C 18.301 4.125 19.984 5.809 19.984 7.875 C 19.984 9.941 18.301 11.621 16.234 11.621 Z M 16.234 5.246 C 14.785 5.246 13.605 6.426 13.605 7.875 C 13.605 9.324 14.785 10.5 16.234 10.5 C 17.684 10.5 18.863 9.324 18.863 7.875 C 18.863 6.426 17.684 5.246 16.234 5.246 Z M 16.234 5.246 M 5.371 10.84 C 5.227 10.84 5.082 10.785 4.973 10.672 C 4.754 10.453 4.754 10.098 4.973 9.879 L 9.781 5.074 C 10 4.855 10.355 4.855 10.574 5.074 C 10.793 5.293 10.793 5.648 10.574 5.867 L 5.766 10.672 C 5.656 10.781 5.512 10.836 5.371 10.836 L 5.371 10.84 Z M 5.371 10.84"
+                    android:strokeWidth="1">
+                    <aapt:attr name="android:fillColor">
+                        <gradient
+                            android:endX="108"
+                            android:endY="108"
+                            android:startX="-2.75"
+                            android:startY="-1.75"
+                            android:type="linear">
+                            <item
+                                android:color="@android:color/system_accent1_300"
+                                android:offset="0.02" />
+                            <item
+                                android:color="@android:color/system_accent1_600"
+                                android:offset="0.99" />
+                        </gradient>
+                    </aapt:attr>
+                </path>
+            </group>
+        </vector>
+    </aapt:attr>
+    <target android:name="group">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="1000"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="scaleY"
+                android:valueFrom="0"
+                android:valueTo="0.81"
+                android:valueType="floatType" />
+        </aapt:attr>
+    </target>
+    <target android:name="group_1">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="1000"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="scaleX"
+                android:valueFrom="0"
+                android:valueTo="0.81"
+                android:valueType="floatType" />
+        </aapt:attr>
+    </target>
+</animated-vector>

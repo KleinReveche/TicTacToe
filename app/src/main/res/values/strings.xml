@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">TicTacToe</string>
+    <string name="reset">Reset</string>
+    <string name="restart">Restart</string>
+    <string name="ttc_reset_multiplayer_stats">Reset Scores</string>
+    <string name="online">Online Mode</string>
+    <string name="offline">Offline Mode</string>
+    <string name="player_x">Player X</string>
+    <string name="player_o">Player O</string>
+    <string name="draw">Draw</string>
+    <string name="you">You</string>
+    <string name="ai">AI</string>
+    <string name="singleplayer">Singleplayer</string>
+    <string name="multiplayer">2v2</string>
+    <string name="won">Won!</string>
 </resources>
