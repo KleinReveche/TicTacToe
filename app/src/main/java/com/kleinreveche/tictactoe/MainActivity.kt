@@ -1,52 +1,55 @@
 package com.kleinreveche.tictactoe
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
+import com.google.accompanist.adaptive.calculateDisplayFeatures
+import com.kleinreveche.tictactoe.features.local.ui.TicTacToeLocal
 import com.kleinreveche.tictactoe.ui.theme.TicTacToeTheme
 
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
 
-        // Handle the splash screen transition.
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "tictactoe")
+
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        ticTacToeDataStore = dataStore
+
         installSplashScreen()
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         super.onCreate(savedInstanceState)
-
         setContent {
+            val windowSizeClass = calculateWindowSizeClass(this)
+            val displayFeatures = calculateDisplayFeatures(this)
             TicTacToeTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    TicTacToeLocal(windowSizeClass, displayFeatures)
                 }
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+    companion object {
+        fun getDataStore(): DataStore<Preferences> {
+            return ticTacToeDataStore
+        }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TicTacToeTheme {
-        Greeting("Android")
+        private lateinit var ticTacToeDataStore: DataStore<Preferences>
     }
 }

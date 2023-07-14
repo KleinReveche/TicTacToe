@@ -7,12 +7,18 @@ android {
     namespace = "com.kleinreveche.tictactoe"
     compileSdk = 33
 
+    val majorVersion = 1
+    val minorVersion = 0
+    val patchVersion = 0
+    val verCode = majorVersion * 10000 + minorVersion * 100 + patchVersion
+    val verName = "$majorVersion.$minorVersion.$patchVersion"
+
     defaultConfig {
         applicationId = "com.kleinreveche.tictactoe"
         minSdk = 26
         targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = verCode
+        versionName = verName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -53,12 +59,12 @@ dependencies {
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.activity.compose)
     implementation(platform(libs.compose.bom))
     implementation(libs.ui)
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
-    implementation(libs.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -67,6 +73,11 @@ dependencies {
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
 
+    implementation(libs.accompanist.adaptive)
     implementation(libs.appcompat)
+    implementation(libs.datastore.preferences)
     implementation(libs.core.splashscreen)
+    implementation(libs.material.icons.extended)
+    implementation(libs.material3)
+    implementation(libs.material3.windowsizeclass)
 }
