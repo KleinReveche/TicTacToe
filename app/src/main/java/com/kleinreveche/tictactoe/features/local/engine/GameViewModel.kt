@@ -69,60 +69,28 @@ class GameViewModel : ViewModel() {
         if (isGameOver) return
 
         if (board[move] == "") {
-            if (currentPlayer == PLAYER_X) {
-                board = ArrayList(
-                    board.toMutableList().also {
-                        it[move] = PLAYER_X
+            board = ArrayList(board).apply {
+                this[move] = currentPlayer
+            }
+            currentPlayer = if (currentPlayer == PLAYER_X) PLAYER_O else PLAYER_X
+
+            if (isSinglePlayer && currentPlayer == PLAYER_O) {
+                if (!isBoardFull(board) && !isGameWon(board, PLAYER_X).isGameWon) {
+                    val nextMove = when (computerDifficulty) {
+                        0 -> GameEngine.computerMoveEasy(board)
+                        1 -> GameEngine.computerMoveNormal(board)
+                        2 -> GameEngine.computerMoveHard(board)
+                        else -> throw IllegalArgumentException("This Difficulty doesn't exist")
                     }
-                )
-                currentPlayer = PLAYER_O
 
-                if (isSinglePlayer) {
-
-                    if (!isBoardFull(board) && !isGameWon(board, PLAYER_X).isGameWon) {
-                        val nextMove = when (computerDifficulty) {
-                            0 -> GameEngine.computerMoveEasy(board)
-                            1 -> GameEngine.computerMoveNormal(board)
-                            2 -> GameEngine.computerMoveHard(board)
-                            else -> throw IllegalArgumentException("This Difficulty doesn't exist")
-                        }
-
-                        board = ArrayList(
-                            board.toMutableList().also {
-                                it[nextMove] = PLAYER_O
-                            }
-                        )
+                    board = ArrayList(board).apply {
+                        this[nextMove] = PLAYER_O
                     }
-                    currentPlayer = PLAYER_X
                 }
-            } else { // Player O
-                board = ArrayList(
-                    board.toMutableList().also {
-                        it[move] = PLAYER_O
-                    }
-                )
                 currentPlayer = PLAYER_X
-
-                if (isSinglePlayer) {
-
-                    if (!isBoardFull(board) && !isGameWon(board, PLAYER_O).isGameWon) {
-                        val nextMove = when (computerDifficulty) {
-                            0 -> GameEngine.computerMoveEasy(board)
-                            1 -> GameEngine.computerMoveNormal(board)
-                            2 -> GameEngine.computerMoveHard(board)
-                            else -> throw IllegalArgumentException("This Difficulty doesn't exist")
-                        }
-
-                        board = ArrayList(
-                            board.toMutableList().also {
-                                it[nextMove] = PLAYER_X
-                            }
-                        )
-                    }
-                    currentPlayer = PLAYER_O
-                }
             }
         }
+
         isGameOver = isGameWon(board, PLAYER_X).isGameWon || isGameWon(
             board,
             PLAYER_O
@@ -207,16 +175,16 @@ class GameViewModel : ViewModel() {
         viewModelScope.saveGameResult(board, singlePlayer, computerDifficulty)
         if (singlePlayer) {
             when {
-                isGameWon(board, PLAYER_X).isGameWon -> this.playerWinCount++
-                isGameWon(board, PLAYER_O).isGameWon -> this.aiWinCount++
+                isGameWon(board, PLAYER_X).isGameWon -> playerWinCount++
+                isGameWon(board, PLAYER_O).isGameWon -> aiWinCount++
                 isBoardFull(board) -> this.drawCount++
             }
         }
         if (!singlePlayer) {
             when {
-                isGameWon(board, PLAYER_X).isGameWon -> this.playerXWinCount++
-                isGameWon(board, PLAYER_O).isGameWon -> this.playerOWinCount++
-                isBoardFull(board) -> this.multiplayerDrawCount++
+                isGameWon(board, PLAYER_X).isGameWon -> playerXWinCount++
+                isGameWon(board, PLAYER_O).isGameWon -> playerOWinCount++
+                isBoardFull(board) -> multiplayerDrawCount++
             }
         }
     }

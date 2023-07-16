@@ -156,20 +156,12 @@ object GameEngine {
     }
 
     fun gameResult(board: ArrayList<String>, singleMode: Boolean): String {
-        when {
-            isGameWon(
-                board,
-                PLAYER_X
-            ).isGameWon -> return "${if (singleMode) "You" else "Player X"} Won!"
-
-            isGameWon(
-                board,
-                PLAYER_O
-            ).isGameWon -> return "${if (singleMode) "AI" else "Player O"} Won!"
-
-            isBoardFull(board) -> return "It's a tie!"
+        return when {
+            isGameWon(board, PLAYER_X).isGameWon -> "${if (singleMode) "You" else "Player X"} Won!"
+            isGameWon(board, PLAYER_O).isGameWon -> "${if (singleMode) "AI" else "Player O"} Won!"
+            isBoardFull(board) -> "It's a tie!"
+            else -> "Tie"
         }
-        return "Tie"
     }
 
     fun CoroutineScope.saveGameResult(

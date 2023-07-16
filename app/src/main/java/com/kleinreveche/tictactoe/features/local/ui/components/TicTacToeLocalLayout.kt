@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Divider
@@ -32,7 +31,6 @@ import com.kleinreveche.tictactoe.data.local.LocalDataStoreKeys
 import com.kleinreveche.tictactoe.features.local.engine.GameViewModel
 import com.kleinreveche.tictactoe.features.local.ui.navigation.TicTacToeLocalNavigationRail
 import com.kleinreveche.tictactoe.features.local.ui.utils.TicTacToeContentType
-import com.kleinreveche.tictactoe.features.local.ui.utils.TicTacToeNavigationType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,181 +43,131 @@ fun TicTacToeLocalLayout(
     showBottomSheet: Boolean,
     onButtonSheetToggle: () -> Unit
 ) {
-    Column(
-        modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        AnimatedVisibility(
-            visible = contentType == TicTacToeContentType.SINGLE_PANE
-                    && windowSize.heightSizeClass != WindowHeightSizeClass.Compact
-        ) {
-            Spacer(modifier = modifier.size(120.dp))
-            if (ticTacToeLocalViewModel.isSinglePlayer) {
-                StatsCounter(
-                    playerXWinCount = ticTacToeLocalViewModel.playerWinCount,
-                    playerOWinCount = ticTacToeLocalViewModel.aiWinCount,
-                    drawCount = ticTacToeLocalViewModel.drawCount,
-                    singlePlayer = true,
-                    difficulty = ticTacToeLocalViewModel.computerDifficulty,
-                    currentPlayer = ticTacToeLocalViewModel.currentPlayer,
-                    showDraw = ticTacToeLocalViewModel.showDraw
-                )
-                Spacer(modifier = modifier.height(30.dp))
-            }
-            if (!ticTacToeLocalViewModel.isSinglePlayer) {
-                StatsCounter(
-                    playerXWinCount = ticTacToeLocalViewModel.playerXWinCount,
-                    playerOWinCount = ticTacToeLocalViewModel.playerOWinCount,
-                    drawCount = ticTacToeLocalViewModel.multiplayerDrawCount,
-                    currentPlayer = ticTacToeLocalViewModel.currentPlayer,
-                    singlePlayer = false,
-                    difficulty = ticTacToeLocalViewModel.computerDifficulty,
-                    showDraw = ticTacToeLocalViewModel.showDraw
-                )
-                Spacer(modifier = modifier.height(30.dp))
-            }
-        }
-
-        ButtonGrid(
-            board = ticTacToeLocalViewModel.board,
-            onclick = {
-                if (
-                    ticTacToeLocalViewModel.board == arrayListOf("", "", "", "", "", "", "", "", "")
-                    && ticTacToeLocalViewModel.computerFirstMove && ticTacToeLocalViewModel.isSinglePlayer
-                )
-                    ticTacToeLocalViewModel.computerPlay() else ticTacToeLocalViewModel.play(it)
-            },
-            windowSize = windowSize,
-            winningMoves = ticTacToeLocalViewModel.winningMoves,
-        )
-        if (showBottomSheet) {
-            TicTacToeLocalSettingsBottomSheet(
-                sheetState = sheetState,
-                isSinglePlayer = ticTacToeLocalViewModel.isSinglePlayer,
-                difficulty = ticTacToeLocalViewModel.computerDifficulty,
-                showDraw = ticTacToeLocalViewModel.showDraw,
-                computerFirst = ticTacToeLocalViewModel.computerFirstMove,
-                onPlayerModeChange = {
-                    ticTacToeLocalViewModel.updatePrefs(
-                        LocalDataStoreKeys.COMPUTER_AS_OPPONENT,
-                        it,
-                    )
-                    ticTacToeLocalViewModel.updatePlayerMode(it)
-                },
-                onDifficultyChange = {
-                    ticTacToeLocalViewModel.updatePrefs(
-                        LocalDataStoreKeys.COMPUTER_DIFFICULTY,
-                        when (it) {
-                            0 -> LocalComputerDifficulty.EASY
-                            1 -> LocalComputerDifficulty.NORMAL
-                            2 -> LocalComputerDifficulty.HARD
-                            else -> {}
-                        },
-                    )
-                    ticTacToeLocalViewModel.updateComputerDifficulty(it)
-                },
-                onShowDrawChange = {
-                    ticTacToeLocalViewModel.updatePrefs(
-                        LocalDataStoreKeys.SHOW_DRAWS,
-                        it,
-                    )
-                    ticTacToeLocalViewModel.showDraw(it)
-                },
-                onFirstMoveChange = {
-                    ticTacToeLocalViewModel.updatePrefs(
-                        LocalDataStoreKeys.COMPUTER_FIRST_MOVE,
-                        it,
-                    )
-                    ticTacToeLocalViewModel.computerFirstMove(it, false)
-                },
-                onDismiss = { onButtonSheetToggle() },
-                onReset = ticTacToeLocalViewModel::resetMultiplayerStats
-            )
-        }
-    }
-}
-
-@Composable
-fun TicTacToeLocalLayoutFirstPane(
-    modifier: Modifier = Modifier,
-    ticTacToeLocalViewModel: GameViewModel,
-    contentType: TicTacToeContentType,
-    navigationType: TicTacToeNavigationType,
-    isFoldable: Boolean,
-    onClickHeader: () -> Unit,
-) {
-    AnimatedVisibility(
-        visible = true
-    ) {
-        TicTacToeLocalNavigationRail {
-            onClickHeader()
-        }
-    }
-    if (!isFoldable) Column(
-        modifier = modifier.fillMaxHeight(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        if (ticTacToeLocalViewModel.isSinglePlayer) {
-            StatsCounter(
-                playerXWinCount = ticTacToeLocalViewModel.playerWinCount,
-                playerOWinCount = ticTacToeLocalViewModel.aiWinCount,
-                drawCount = ticTacToeLocalViewModel.drawCount,
-                singlePlayer = true,
-                currentPlayer = ticTacToeLocalViewModel.currentPlayer,
-                difficulty = ticTacToeLocalViewModel.computerDifficulty,
-                showDraw = ticTacToeLocalViewModel.showDraw,
-                isLandscape = true
-            )
-        }
-        if (!ticTacToeLocalViewModel.isSinglePlayer) {
-            StatsCounter(
-                playerXWinCount = ticTacToeLocalViewModel.playerXWinCount,
-                playerOWinCount = ticTacToeLocalViewModel.playerOWinCount,
-                drawCount = ticTacToeLocalViewModel.multiplayerDrawCount,
-                singlePlayer = false,
-                currentPlayer = ticTacToeLocalViewModel.currentPlayer,
-                difficulty = ticTacToeLocalViewModel.computerDifficulty,
-                showDraw = ticTacToeLocalViewModel.showDraw,
-                isLandscape = true
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TicTacToeLocalLayoutTwoPane(
-    ticTacToeLocalViewModel: GameViewModel,
-    windowSize: WindowSizeClass,
-    contentType: TicTacToeContentType,
-    sheetState: SheetState,
-    isFoldable: Boolean = false,
-    navigationType: TicTacToeNavigationType,
-    showBottomSheet: Boolean,
-    onButtonSheetToggle: () -> Unit
-) {
-    Row {
-        TicTacToeLocalLayoutFirstPane(
-            ticTacToeLocalViewModel = ticTacToeLocalViewModel,
-            contentType = contentType,
-            navigationType = navigationType,
-            onClickHeader = {
+    Row(modifier = modifier.fillMaxSize()) {
+        if (contentType != TicTacToeContentType.SINGLE_PANE) {
+            TicTacToeLocalNavigationRail {
                 onButtonSheetToggle()
-            },
-            isFoldable = isFoldable,
-            modifier = Modifier.weight(0.2f),
-        )
-        TicTacToeLocalLayout(
-            ticTacToeLocalViewModel = ticTacToeLocalViewModel,
-            windowSize = windowSize,
-            contentType = contentType,
-            sheetState = sheetState,
-            showBottomSheet = showBottomSheet,
-            onButtonSheetToggle = { onButtonSheetToggle() },
-            modifier = Modifier.weight(0.8f)
-        )
+            }
+        }
+        AnimatedVisibility(
+            modifier = Modifier
+                .weight(0.2f)
+                .fillMaxHeight(),
+            visible = contentType != TicTacToeContentType.SINGLE_PANE
+                    && windowSize.heightSizeClass != WindowHeightSizeClass.Expanded
+        ) {
+            Column(
+                modifier = Modifier.fillMaxHeight(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                val singlePlayer = ticTacToeLocalViewModel.isSinglePlayer
+                StatsCounter(
+                    playerXWinCount = if (singlePlayer) ticTacToeLocalViewModel.playerWinCount else ticTacToeLocalViewModel.playerXWinCount,
+                    playerOWinCount = if (singlePlayer) ticTacToeLocalViewModel.aiWinCount else ticTacToeLocalViewModel.playerOWinCount,
+                    drawCount = if (singlePlayer) ticTacToeLocalViewModel.drawCount else ticTacToeLocalViewModel.multiplayerDrawCount,
+                    singlePlayer = singlePlayer,
+                    difficulty = ticTacToeLocalViewModel.computerDifficulty,
+                    currentPlayer = ticTacToeLocalViewModel.currentPlayer,
+                    showDraw = ticTacToeLocalViewModel.showDraw,
+                    isLandscape = true
+                )
+            }
+        }
+
+        Column(
+            modifier = Modifier
+                .weight(if (contentType == TicTacToeContentType.SINGLE_PANE) 1f else 0.8f)
+                .fillMaxHeight(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            val singlePlayer = ticTacToeLocalViewModel.isSinglePlayer
+
+            AnimatedVisibility(
+                visible = contentType == TicTacToeContentType.SINGLE_PANE
+                        || windowSize.heightSizeClass == WindowHeightSizeClass.Expanded
+            ) {
+                Spacer(modifier = Modifier
+                    .size(120.dp)
+                    .fillMaxWidth())
+                StatsCounter(
+                    playerXWinCount = if (singlePlayer) ticTacToeLocalViewModel.playerWinCount else ticTacToeLocalViewModel.playerXWinCount,
+                    playerOWinCount = if (singlePlayer) ticTacToeLocalViewModel.aiWinCount else ticTacToeLocalViewModel.playerOWinCount,
+                    drawCount = if (singlePlayer) ticTacToeLocalViewModel.drawCount else ticTacToeLocalViewModel.multiplayerDrawCount,
+                    singlePlayer = singlePlayer,
+                    difficulty = ticTacToeLocalViewModel.computerDifficulty,
+                    currentPlayer = ticTacToeLocalViewModel.currentPlayer,
+                    showDraw = ticTacToeLocalViewModel.showDraw
+                )
+            }
+            ButtonGrid(
+                board = ticTacToeLocalViewModel.board,
+                onclick = {
+                    if (
+                        ticTacToeLocalViewModel.board == arrayListOf(
+                            "",
+                            "",
+                            "",
+                            "",
+                            "",
+                            "",
+                            "",
+                            "",
+                            ""
+                        )
+                        && ticTacToeLocalViewModel.computerFirstMove && ticTacToeLocalViewModel.isSinglePlayer
+                    )
+                        ticTacToeLocalViewModel.computerPlay() else ticTacToeLocalViewModel.play(it)
+                },
+                windowSize = windowSize,
+                winningMoves = ticTacToeLocalViewModel.winningMoves,
+            )
+            if (showBottomSheet) {
+                TicTacToeLocalSettingsBottomSheet(
+                    sheetState = sheetState,
+                    isSinglePlayer = ticTacToeLocalViewModel.isSinglePlayer,
+                    difficulty = ticTacToeLocalViewModel.computerDifficulty,
+                    showDraw = ticTacToeLocalViewModel.showDraw,
+                    computerFirst = ticTacToeLocalViewModel.computerFirstMove,
+                    onPlayerModeChange = {
+                        ticTacToeLocalViewModel.updatePrefs(
+                            LocalDataStoreKeys.COMPUTER_AS_OPPONENT,
+                            it,
+                        )
+                        ticTacToeLocalViewModel.updatePlayerMode(it)
+                    },
+                    onDifficultyChange = {
+                        ticTacToeLocalViewModel.updatePrefs(
+                            LocalDataStoreKeys.COMPUTER_DIFFICULTY,
+                            when (it) {
+                                0 -> LocalComputerDifficulty.EASY
+                                1 -> LocalComputerDifficulty.NORMAL
+                                2 -> LocalComputerDifficulty.HARD
+                                else -> {}
+                            },
+                        )
+                        ticTacToeLocalViewModel.updateComputerDifficulty(it)
+                    },
+                    onShowDrawChange = {
+                        ticTacToeLocalViewModel.updatePrefs(
+                            LocalDataStoreKeys.SHOW_DRAWS,
+                            it,
+                        )
+                        ticTacToeLocalViewModel.showDraw(it)
+                    },
+                    onFirstMoveChange = {
+                        ticTacToeLocalViewModel.updatePrefs(
+                            LocalDataStoreKeys.COMPUTER_FIRST_MOVE,
+                            it,
+                        )
+                        ticTacToeLocalViewModel.computerFirstMove(it, false)
+                    },
+                    onDismiss = { onButtonSheetToggle() },
+                    onReset = ticTacToeLocalViewModel::resetMultiplayerStats
+                )
+            }
+        }
     }
 }
 

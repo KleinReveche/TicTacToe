@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.layout.DisplayFeature
@@ -25,11 +26,9 @@ import androidx.window.layout.FoldingFeature
 import com.kleinreveche.tictactoe.R
 import com.kleinreveche.tictactoe.features.local.engine.GameViewModel
 import com.kleinreveche.tictactoe.features.local.ui.components.TicTacToeLocalLayout
-import com.kleinreveche.tictactoe.features.local.ui.components.TicTacToeLocalLayoutTwoPane
 import com.kleinreveche.tictactoe.features.local.ui.navigation.TicTacToeLocalTopAppBar
 import com.kleinreveche.tictactoe.features.local.ui.utils.DevicePosture
 import com.kleinreveche.tictactoe.features.local.ui.utils.TicTacToeContentType
-import com.kleinreveche.tictactoe.features.local.ui.utils.TicTacToeNavigationContentPosition
 import com.kleinreveche.tictactoe.features.local.ui.utils.TicTacToeNavigationType
 import com.kleinreveche.tictactoe.features.local.ui.utils.getFoldingDevicePosture
 
@@ -85,25 +84,13 @@ fun TicTacToeLocal(
         }
     }
 
-    /*TODO: Implement This */
-    val navigationContentPosition = when (windowSize.heightSizeClass) {
-        WindowHeightSizeClass.Compact -> {
-            TicTacToeNavigationContentPosition.TOP
-        }
-
-        WindowHeightSizeClass.Medium,
-        WindowHeightSizeClass.Expanded -> {
-            TicTacToeNavigationContentPosition.CENTER
-        }
-
-        else -> {
-            TicTacToeNavigationContentPosition.TOP
-        }
-    }
-
     Scaffold(
         topBar = {
-            AnimatedVisibility(visible = navigationType == TicTacToeNavigationType.TOP_APP_BAR) {
+            AnimatedVisibility(
+                visible = navigationType == TicTacToeNavigationType.TOP_APP_BAR
+                        || windowSize.widthSizeClass == WindowWidthSizeClass.Medium
+                        && windowSize.heightSizeClass == WindowHeightSizeClass.Medium
+            ) {
                 TicTacToeLocalTopAppBar {
                     showBottomSheet = !showBottomSheet
                 }
@@ -125,35 +112,15 @@ fun TicTacToeLocal(
         }
     ) {
         it.calculateBottomPadding()
-        if (
-            contentType == TicTacToeContentType.DUAL_PANE
-            || windowSize.widthSizeClass == WindowWidthSizeClass.Medium
-            || windowSize.heightSizeClass == WindowHeightSizeClass.Compact
+        TicTacToeLocalLayout(
+            modifier = Modifier,
+            ticTacToeLocalViewModel = ticTacToeLocalViewModel,
+            windowSize = windowSize,
+            contentType = contentType,
+            sheetState = sheetState,
+            showBottomSheet = showBottomSheet
         ) {
-            TicTacToeLocalLayoutTwoPane(
-                ticTacToeLocalViewModel = ticTacToeLocalViewModel,
-                windowSize = windowSize,
-                contentType = contentType,
-                sheetState = sheetState,
-                navigationType = navigationType,
-                isFoldable =
-                windowSize.widthSizeClass == WindowWidthSizeClass.Medium
-                        && windowSize.heightSizeClass == WindowHeightSizeClass.Medium,
-                showBottomSheet = showBottomSheet
-            ) {
-                showBottomSheet = !showBottomSheet
-            }
-        } else {
-            TicTacToeLocalLayout(
-                ticTacToeLocalViewModel = ticTacToeLocalViewModel,
-                windowSize = windowSize,
-                contentType = contentType,
-                sheetState = sheetState,
-                showBottomSheet = showBottomSheet,
-                onButtonSheetToggle = {
-                    showBottomSheet = !showBottomSheet
-                }
-            )
+            showBottomSheet = !showBottomSheet
         }
     }
 }
