@@ -1,7 +1,7 @@
 package com.kleinreveche.tictactoe.features.local.engine
 
-import android.annotation.SuppressLint
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -16,20 +16,19 @@ import com.kleinreveche.tictactoe.features.local.engine.GameEngine.isBoardFull
 import com.kleinreveche.tictactoe.features.local.engine.GameEngine.isGameWon
 import com.kleinreveche.tictactoe.features.local.engine.GameEngine.saveGameResult
 
-@SuppressLint("MutableCollectionMutableState")
 class GameViewModel : ViewModel() {
 
     private var isGameOver by mutableStateOf(false)
     private var winner by mutableStateOf("")
 
-    var board by mutableStateOf(arrayListOf("", "", "", "", "", "", "", "", ""))
+    var board by mutableStateOf(Array(9) { "" })
         private set
     var winningMoves by mutableStateOf(emptyList<Int>())
         private set
-    var computerDifficulty by mutableStateOf(getPref(LocalDataStoreKeys.COMPUTER_DIFFICULTY) as Int)
+    var computerDifficulty by mutableIntStateOf(getPref(LocalDataStoreKeys.COMPUTER_DIFFICULTY) as Int)
     var computerFirstMove by mutableStateOf(getPref(LocalDataStoreKeys.COMPUTER_FIRST_MOVE) as Boolean)
     var isSinglePlayer by mutableStateOf(getPref(LocalDataStoreKeys.COMPUTER_AS_OPPONENT) as Boolean)
-    var playerWinCount by mutableStateOf(
+    var playerWinCount by mutableIntStateOf(
         getPref(
             when (computerDifficulty) {
                 0 -> LocalDataStoreKeys.WINS_EASY
@@ -38,7 +37,7 @@ class GameViewModel : ViewModel() {
             }
         ) as Int
     )
-    var aiWinCount by mutableStateOf(
+    var aiWinCount by mutableIntStateOf(
         getPref(
             when (computerDifficulty) {
                 0 -> LocalDataStoreKeys.LOSES_EASY
@@ -47,7 +46,7 @@ class GameViewModel : ViewModel() {
             }
         ) as Int
     )
-    var drawCount by mutableStateOf(
+    var drawCount by mutableIntStateOf(
         getPref(
             when (computerDifficulty) {
                 0 -> LocalDataStoreKeys.DRAWS_EASY
@@ -58,9 +57,9 @@ class GameViewModel : ViewModel() {
     )
     var showDraw by mutableStateOf(getPref(LocalDataStoreKeys.SHOW_DRAWS) as Boolean)
 
-    var playerXWinCount by mutableStateOf(0)
-    var playerOWinCount by mutableStateOf(0)
-    var multiplayerDrawCount by mutableStateOf(0)
+    var playerXWinCount by mutableIntStateOf(0)
+    var playerOWinCount by mutableIntStateOf(0)
+    var multiplayerDrawCount by mutableIntStateOf(0)
 
     var currentPlayer by mutableStateOf(if (getPref(LocalDataStoreKeys.COMPUTER_FIRST_MOVE) as Boolean) PLAYER_O else PLAYER_X)
         private set
@@ -69,9 +68,9 @@ class GameViewModel : ViewModel() {
         if (isGameOver) return
 
         if (board[move] == "") {
-            board = ArrayList(board).apply {
-                this[move] = currentPlayer
-            }
+            board = board.copyOf()
+            board[move] = currentPlayer
+
             currentPlayer = if (currentPlayer == PLAYER_X) PLAYER_O else PLAYER_X
 
             if (isSinglePlayer && currentPlayer == PLAYER_O) {
@@ -83,9 +82,8 @@ class GameViewModel : ViewModel() {
                         else -> throw IllegalArgumentException("This Difficulty doesn't exist")
                     }
 
-                    board = ArrayList(board).apply {
-                        this[nextMove] = PLAYER_O
-                    }
+                    board = board.copyOf()
+                    board[nextMove] = PLAYER_O
                 }
                 currentPlayer = PLAYER_X
             }
@@ -109,35 +107,21 @@ class GameViewModel : ViewModel() {
             0 -> GameEngine.computerMoveEasy(board)
             1 -> GameEngine.computerMoveNormal(board)
             // Minimax Algorithm takes too long when the board is empty, so a random move will be first made.
-            2 -> if (board == arrayListOf(
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    ""
-                )
-            ) GameEngine.computerMoveEasy(board) else GameEngine.computerMoveHard(board)
+            2 -> if (board.contentEquals(Array(9) { "" })) GameEngine.computerMoveEasy(board) else GameEngine.computerMoveHard(board)
+
 
             else -> throw IllegalArgumentException("This Difficulty doesn't exist")
         }
-
-        board = ArrayList(
-            board.toMutableList().also {
-                it[nextMove] = PLAYER_O
-            }
-        )
-
+        board = board.copyOf()
+        board[nextMove] = PLAYER_O
         currentPlayer = PLAYER_X
+
         play(nextMove)
     }
 
     fun reset(currentPlayerO: Boolean = false) {
         isGameOver = false
-        board = arrayListOf("", "", "", "", "", "", "", "", "")
+        board = Array(9) { "" }
         winningMoves = emptyList()
         currentPlayer = if (currentPlayerO && !isSinglePlayer) PLAYER_O else PLAYER_X
     }
@@ -171,7 +155,7 @@ class GameViewModel : ViewModel() {
 
     }
 
-    private fun updateWinCounters(board: ArrayList<String>, singlePlayer: Boolean) {
+    private fun updateWinCounters(board: Array<String>, singlePlayer: Boolean) {
         viewModelScope.saveGameResult(board, singlePlayer, computerDifficulty)
         if (singlePlayer) {
             when {

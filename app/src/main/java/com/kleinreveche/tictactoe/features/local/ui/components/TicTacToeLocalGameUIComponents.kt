@@ -1,7 +1,6 @@
 package com.kleinreveche.tictactoe.features.local.ui.components
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.LocalIndication
@@ -35,7 +34,6 @@ import com.kleinreveche.tictactoe.R
 import com.kleinreveche.tictactoe.features.local.engine.GameEngine.PLAYER_O
 import com.kleinreveche.tictactoe.features.local.engine.GameEngine.PLAYER_X
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun TicTacToeButton(
     text: String,
@@ -109,7 +107,7 @@ fun TicTacToeButton(
 
 @Composable
 fun ButtonGrid(
-    board: ArrayList<String>,
+    board: Array<String>,
     onclick: (Int) -> Unit,
     windowSize: WindowSizeClass,
     winningMoves: List<Int> = emptyList(),

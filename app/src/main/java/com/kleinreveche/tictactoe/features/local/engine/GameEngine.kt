@@ -13,15 +13,15 @@ object GameEngine {
         val winningMoves: List<Int>
     )
 
-    fun isBoardFull(board: ArrayList<String>): Boolean {
+    fun isBoardFull(board: Array<String>): Boolean {
         for (i in board) {
             if (i != PLAYER_X && i != PLAYER_O) return false
         }
         return true
     }
 
-    private fun copyBoard(board: ArrayList<String>): ArrayList<String> {
-        val newBoard = arrayListOf("", "", "", "", "", "", "", "", "")
+    private fun copyBoard(board: Array<String>): Array<String> {
+        val newBoard = arrayOf("", "", "", "", "", "", "", "", "")
         for (i in 0 until board.count()) {
             newBoard[i] = board[i]
         }
@@ -31,7 +31,7 @@ object GameEngine {
     /**
      * Chooses a random empty cell as an easy move for the computer
      */
-    fun computerMoveEasy(board: ArrayList<String>): Int {
+    fun computerMoveEasy(board: Array<String>): Int {
         val emptyCells = board.indices.filter { board[it] == "" }
         return if (emptyCells.isEmpty()) -1
         else emptyCells.random()
@@ -41,7 +41,7 @@ object GameEngine {
      * Chooses a random move for the computer based on the order of
      * priority to make the computer win.
      * */
-    fun computerMoveNormal(board: ArrayList<String>): Int {
+    fun computerMoveNormal(board: Array<String>): Int {
         // check if computer can win in this move
         for (i in 0 until board.count()) {
             val copy = copyBoard(board)
@@ -60,17 +60,17 @@ object GameEngine {
         }
 
         // try to make corners if it is free
-        val move = chooseRandomMove(board, arrayListOf(0, 2, 6, 8))
+        val move = chooseRandomMove(board, listOf(0, 2, 6, 8))
         if (move != -1) return move
 
         // try to take center if it is free
         if (board[4] == "") return 4
 
         // finally try to make the sides
-        return chooseRandomMove(board, arrayListOf(1, 3, 5, 7))
+        return chooseRandomMove(board, listOf(1, 3, 5, 7))
     }
 
-    private fun chooseRandomMove(board: ArrayList<String>, moves: List<Int>): Int {
+    private fun chooseRandomMove(board: Array<String>, moves: List<Int>): Int {
         val possibleMoves = moves.filter { board[it] == "" }
         return if (possibleMoves.isEmpty()) -1
         else possibleMoves.random()
@@ -80,7 +80,7 @@ object GameEngine {
      * Chooses a move for the computer based on the
      *  minimax algorithm to make the computer win.
      * */
-    fun computerMoveHard(board: ArrayList<String>): Int {
+    fun computerMoveHard(board: Array<String>): Int {
         var bestScore = Int.MIN_VALUE
         var bestMove = -1
 
@@ -101,7 +101,7 @@ object GameEngine {
         return bestMove
     }
 
-    private fun minimaxAlgorithm(board: ArrayList<String>, isMaximizing: Boolean): Int {
+    private fun minimaxAlgorithm(board: Array<String>, isMaximizing: Boolean): Int {
         if (isGameWon(board, PLAYER_X).isGameWon) {
             return -1 // Player X wins
         } else if (isGameWon(board, PLAYER_O).isGameWon) {
@@ -135,7 +135,7 @@ object GameEngine {
         }
     }
 
-    fun isGameWon(board: ArrayList<String>, player: String): WinResult {
+    fun isGameWon(board: Array<String>, player: String): WinResult {
         val winningIndices = mutableListOf<Int>()
         val winningMoves = listOf(
             listOf(0, 1, 2), listOf(3, 4, 5), listOf(6, 7, 8),
@@ -155,7 +155,7 @@ object GameEngine {
         )
     }
 
-    fun gameResult(board: ArrayList<String>, singleMode: Boolean): String {
+    fun gameResult(board: Array<String>, singleMode: Boolean): String {
         return when {
             isGameWon(board, PLAYER_X).isGameWon -> "${if (singleMode) "You" else "Player X"} Won!"
             isGameWon(board, PLAYER_O).isGameWon -> "${if (singleMode) "AI" else "Player O"} Won!"
@@ -165,7 +165,7 @@ object GameEngine {
     }
 
     fun CoroutineScope.saveGameResult(
-        board: ArrayList<String>,
+        board: Array<String>,
         singleMode: Boolean,
         computerDifficulty: Int
     ) {

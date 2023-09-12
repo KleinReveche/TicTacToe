@@ -105,17 +105,7 @@ fun TicTacToeLocalLayout(
                 board = ticTacToeLocalViewModel.board,
                 onclick = {
                     if (
-                        ticTacToeLocalViewModel.board == arrayListOf(
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            ""
-                        )
+                        ticTacToeLocalViewModel.board.contentEquals(Array(9) { "" })
                         && ticTacToeLocalViewModel.computerFirstMove && ticTacToeLocalViewModel.isSinglePlayer
                     )
                         ticTacToeLocalViewModel.computerPlay() else ticTacToeLocalViewModel.play(it)
