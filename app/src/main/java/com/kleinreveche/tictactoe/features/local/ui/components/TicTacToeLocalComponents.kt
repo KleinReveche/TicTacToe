@@ -2,7 +2,6 @@ package com.kleinreveche.tictactoe.features.local.ui.components
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -40,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import com.kleinreveche.tictactoe.R
 import com.kleinreveche.tictactoe.features.local.engine.GameEngine.PLAYER_O
 import com.kleinreveche.tictactoe.features.local.engine.GameEngine.PLAYER_X
+import com.kleinreveche.tictactoe.features.local.engine.GameViewModel
 import com.kleinreveche.tictactoe.features.local.ui.components.material3.Material3SegmentedButton
 import com.kleinreveche.tictactoe.features.local.ui.components.material3.SegmentedButtonDefaults
 import com.kleinreveche.tictactoe.features.local.ui.components.material3.SegmentedButtonRow
@@ -90,7 +90,7 @@ fun TicTacToeLocalSinglePlayerModeSelector(
 fun TicTacToeLocalComputerDifficultySelector(
     difficulty: Int, onClickedChange: (Int) -> Unit
 ) {
-    val computerDifficulty = remember { mutableStateOf(difficulty) }
+    val ticTacToeLocalViewModel = GameViewModel()
     val items = stringArrayResource(id = R.array.computerDifficulty).asList()
     Column(
         modifier = Modifier
@@ -112,9 +112,9 @@ fun TicTacToeLocalComputerDifficultySelector(
                 shape = SegmentedButtonDefaults.shape(position = index, count = items.size),
                 onCheckedChange = {
                     onClickedChange(index)
-                    computerDifficulty.value = index
+                    ticTacToeLocalViewModel.computerDifficulty = index
                 },
-                checked = index == computerDifficulty.value
+                checked = index == difficulty
             ) {
                 Row {
                     Spacer(Modifier.size(width = 23.dp, height = 0.dp))
@@ -221,7 +221,6 @@ fun GameButton(buttonName: String, onClick: () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun StatsCounter(
     modifier: Modifier = Modifier,
@@ -234,10 +233,9 @@ fun StatsCounter(
     difficulty: Int,
     isLandscape: Boolean = false
 ) {
-    val isSinglePlayer = remember { mutableStateOf(singlePlayer) }
     val landscape = remember { mutableStateOf(isLandscape) }
 
-    AnimatedContent(targetState = drawCount, label = "") {
+    AnimatedContent(targetState = drawCount, label = "") {draw ->
         when (landscape.value) {
             true ->
                 Column(modifier.padding(start = 16.dp, end = 16.dp)) {
@@ -247,7 +245,7 @@ fun StatsCounter(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = if (isSinglePlayer.value)
+                            text = if (singlePlayer)
                                 stringResource(id = R.string.you)
                             else
                                 stringResource(id = R.string.player_x),
@@ -292,7 +290,7 @@ fun StatsCounter(
                                 fontSize = 16.sp
                             )
                             Text(
-                                text = "$drawCount",
+                                text = "$draw",
                                 fontSize = 32.sp
                             )
                         }
@@ -308,7 +306,7 @@ fun StatsCounter(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = if (isSinglePlayer.value) {
+                            text = if (singlePlayer) {
                                 when (difficulty) {
                                     0 -> stringResource(id = R.string.ai_easy)
                                     1 -> stringResource(id = R.string.ai_normal)
@@ -349,7 +347,7 @@ fun StatsCounter(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = if (isSinglePlayer.value)
+                            text = if (singlePlayer)
                                 stringResource(id = R.string.you)
                             else
                                 stringResource(id = R.string.player_x),
@@ -402,7 +400,7 @@ fun StatsCounter(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = if (isSinglePlayer.value)
+                            text = if (singlePlayer)
                                 when (difficulty) {
                                     0 -> stringResource(id = R.string.ai_easy)
                                     1 -> stringResource(id = R.string.ai_normal)
