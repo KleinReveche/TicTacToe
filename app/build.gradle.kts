@@ -5,10 +5,10 @@ plugins {
 
 android {
     namespace = "com.kleinreveche.tictactoe"
-    compileSdk = 33
+    compileSdk = 34
 
     val majorVersion = 1
-    val minorVersion = 0
+    val minorVersion = 1
     val patchVersion = 0
     val verCode = majorVersion * 10000 + minorVersion * 100 + patchVersion
     val verName = "$majorVersion.$minorVersion.$patchVersion"
@@ -28,7 +28,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -46,7 +46,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.2"
     }
     packaging {
         resources {
