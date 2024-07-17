@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.AppSplash" parent="Theme.SplashScreen.IconBackground">
+        <item name="windowSplashScreenBackground">@color/cream_white</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="windowSplashScreenIconBackgroundColor">?attr/colorPrimary</item>
+        <item name="postSplashScreenTheme">@style/Theme.TicTacToe</item>
+
+        <item name="android:windowLightStatusBar">true</item>
+
+        <!-- API 31+ specific attributes -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_animated</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/ic_splash_branding</item>
+    </style>
+</resources>

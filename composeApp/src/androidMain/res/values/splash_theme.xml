@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Splash Screen Theme. -->
+    <style name="Theme.AppSplash" parent="Theme.SplashScreen.IconBackground">
+        <item name="windowSplashScreenBackground">@color/cream_white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_icon</item>
+        <item name="windowSplashScreenIconBackgroundColor">@color/md_theme_light_primaryContainer
+        </item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/Theme.TicTacToe</item>
+
+        <!-- Status bar and Nav bar configs -->
+        <item name="android:statusBarColor">@color/cream_white</item>
+        <item name="android:navigationBarColor">@color/cream_white</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+</resources>
