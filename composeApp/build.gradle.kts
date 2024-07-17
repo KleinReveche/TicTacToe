@@ -35,6 +35,8 @@ kotlin {
       implementation(libs.androidx.appcompat)
 
       implementation(libs.androidx.core.splashscreen)
+        implementation(libs.koin.android)
+        implementation(libs.koin.androidx.compose)
     }
 
     commonMain.dependencies {
@@ -47,12 +49,16 @@ kotlin {
 
       api(libs.datastore.preferences)
       api(libs.datastore)
+        api(libs.koin.core)
 
       implementation(libs.navigation.compose)
       implementation(libs.kotlinx.serialization.json)
       implementation(libs.material3.window.size)
       implementation(libs.room.runtime)
       implementation(libs.sqlite.bundled)
+        implementation(libs.koin.compose)
+        implementation(libs.koin.compose.viewmodel)
+        implementation(libs.lifecycle.viewmodel)
     }
 
     desktopMain.dependencies { implementation(compose.desktop.currentOs) }
