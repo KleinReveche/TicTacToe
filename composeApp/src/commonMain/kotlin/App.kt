@@ -6,5 +6,5 @@ import presentation.theme.TicTacToeTheme
 @Composable
 @Preview
 fun App() {
-    TicTacToeTheme { Navigation() }
+  TicTacToeTheme { Navigation() }
 }

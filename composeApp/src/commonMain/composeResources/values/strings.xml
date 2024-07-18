@@ -11,4 +11,6 @@
     <string name="easy">Easy</string>
     <string name="normal">Normal</string>
     <string name="insane">Insane</string>
+    <string name="start">Start</string>
+    <string name="restart">Restart</string>
 </resources>

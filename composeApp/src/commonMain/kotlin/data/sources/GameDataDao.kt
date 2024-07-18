@@ -9,12 +9,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface GameDataDao {
-    @Upsert
-    suspend fun upsertGameData(gameData: GameData)
+  @Upsert suspend fun upsertGameData(gameData: GameData)
 
-    @Delete
-    suspend fun deleteGameData(gameData: GameData)
+  @Delete suspend fun deleteGameData(gameData: GameData)
 
-    @Query("SELECT * FROM gamedata")
-    fun getAllGameData(): Flow<List<GameData>>
+  @Query("SELECT * FROM gamedata") fun getAllGameData(): Flow<List<GameData>>
 }

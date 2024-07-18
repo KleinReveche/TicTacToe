@@ -37,6 +37,7 @@ kotlin {
       implementation(libs.androidx.core.splashscreen)
       implementation(libs.koin.android)
       implementation(libs.koin.androidx.compose)
+      implementation(libs.kotlinx.coroutines.android)
     }
 
     commonMain.dependencies {
@@ -47,6 +48,7 @@ kotlin {
       implementation(compose.components.resources)
       implementation(compose.components.uiToolingPreview)
 
+      api(compose.materialIconsExtended)
       api(libs.datastore.preferences)
       api(libs.datastore)
       api(libs.koin.core)
@@ -59,6 +61,8 @@ kotlin {
       implementation(libs.koin.compose)
       implementation(libs.koin.compose.viewmodel)
       implementation(libs.lifecycle.viewmodel)
+      implementation(libs.kotlinx.coroutines.core)
+      implementation(libs.kotlinx.coroutines.swing)
     }
 
     desktopMain.dependencies { implementation(compose.desktop.currentOs) }
@@ -103,9 +107,7 @@ compose.desktop {
         iconFile.set(project.file("src/commonMain/composeResources/drawable/icon_windows.ico"))
       }
 
-      linux {
-        iconFile.set(project.file("src/commonMain/composeResources/drawable/icon.png"))
-      }
+      linux { iconFile.set(project.file("src/commonMain/composeResources/drawable/icon.png")) }
     }
   }
 }

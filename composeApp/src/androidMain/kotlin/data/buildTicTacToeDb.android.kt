@@ -6,9 +6,9 @@ import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import data.sources.TicTacToeDatabase
 
 fun buildTicTacToeDb(context: Context): TicTacToeDatabase =
-    Room.databaseBuilder<TicTacToeDatabase>(
-        context = context.applicationContext,
-        name = context.getDatabasePath(TicTacToeDatabase.DATABASE_NAME).absolutePath,
+  Room.databaseBuilder<TicTacToeDatabase>(
+      context = context.applicationContext,
+      name = context.getDatabasePath(TicTacToeDatabase.DATABASE_NAME).absolutePath,
     )
-        .setDriver(BundledSQLiteDriver())
-        .build()
+    .setDriver(BundledSQLiteDriver())
+    .build()

@@ -15,22 +15,20 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class ScreenMainViewModel(
-    private val upsertAppSetting: UpsertAppSetting,
-    private val getAppSetting: GetAppSetting
+  private val upsertAppSetting: UpsertAppSetting,
+  private val getAppSetting: GetAppSetting,
 ) : ViewModel() {
-    val defaultPlayer = getAppSetting(AppSettings.DEFAULT_PLAYER_VS_COMPUTER)
-    var localVsComputerShowDetails by mutableStateOf(false)
-    var localVsPlayerShowDetails by mutableStateOf(false)
-    var multiplayerShowDetails by mutableStateOf(false)
-    var player1 by mutableStateOf("")
-    var player2 by mutableStateOf("")
-    var singleplayerType by mutableIntStateOf(0)
-    val playerTypes = arrayOf(PLAYER_X, PLAYER_O)
-    var computerDifficulty by mutableIntStateOf(0)
+  val defaultPlayer = getAppSetting(AppSettings.DEFAULT_PLAYER_VS_COMPUTER)
+  var localVsComputerShowDetails by mutableStateOf(false)
+  var localVsPlayerShowDetails by mutableStateOf(false)
+  var multiplayerShowDetails by mutableStateOf(false)
+  var player1 by mutableStateOf("")
+  var player2 by mutableStateOf("")
+  var singleplayerType by mutableIntStateOf(0)
+  val playerTypes = arrayOf(PLAYER_X, PLAYER_O)
+  var computerDifficulty by mutableIntStateOf(0)
 
-    fun upsertSetting(scope: CoroutineScope, appSetting: AppSetting) {
-        scope.launch {
-            upsertAppSetting(appSetting)
-        }
-    }
+  fun upsertSetting(scope: CoroutineScope, appSetting: AppSetting) {
+    scope.launch { upsertAppSetting(appSetting) }
+  }
 }

@@ -28,7 +28,8 @@ import androidx.navigation.NavHostController
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.KoinContext
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.common.components.SimpleTopAppBar
 import presentation.navigation.components.LocalVsComputerDetails
 import presentation.navigation.components.LocalVsPlayerDetails
@@ -40,89 +41,95 @@ import tictactoe.composeapp.generated.resources.local_vs_computer
 import tictactoe.composeapp.generated.resources.local_vs_player
 import tictactoe.composeapp.generated.resources.multiplayer
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun ScreenMain(navController: NavHostController) {
-    KoinContext {
-        val scope = rememberCoroutineScope()
-        val snackbarHostState = remember { SnackbarHostState() }
-        val vm = koinInject<ScreenMainViewModel>()
-        val defPlayer = vm.defaultPlayer.collectAsState(initial = null)
-        vm.player1 = defPlayer.value?.value ?: ""
+  KoinContext {
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val vm = koinViewModel<ScreenMainViewModel>()
+    val defPlayer = vm.defaultPlayer.collectAsState(initial = null)
+    vm.player1 = defPlayer.value?.value ?: ""
 
-        Scaffold(
-            topBar = { SimpleTopAppBar(stringResource(Res.string.app_name)) },
-            modifier = Modifier.background(MaterialTheme.colorScheme.surface),
-            bottomBar = {
-                Row(
-                    modifier = Modifier.fillMaxWidth().height(100.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.Bottom,
-                ) {
-                    Image(painterResource(Res.drawable.ic_branding), null, Modifier.size(90.dp))
-                }
-            },
-            snackbarHost = { SnackbarHost(snackbarHostState) }
+    Scaffold(
+      topBar = { SimpleTopAppBar(stringResource(Res.string.app_name)) },
+      modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+      bottomBar = {
+        Row(
+          modifier = Modifier.fillMaxWidth().height(100.dp),
+          horizontalArrangement = Arrangement.Center,
+          verticalAlignment = Alignment.Bottom,
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                OutlinedButton(onClick = {
-                    vm.localVsComputerShowDetails = !vm.localVsComputerShowDetails
-                    vm.localVsPlayerShowDetails = false
-                    vm.multiplayerShowDetails = false
-                }) {
-                    Text(stringResource(Res.string.local_vs_computer))
-                }
-
-                AnimatedVisibility(vm.localVsComputerShowDetails) {
-                    LocalVsComputerDetails(
-                        modifier = Modifier.padding(10.dp),
-                        navController = navController,
-                        scope = scope,
-                        snackbarHostState = snackbarHostState,
-                        vm = vm
-                    )
-                }
-
-
-                OutlinedButton(onClick = {
-                    vm.localVsPlayerShowDetails = !vm.localVsPlayerShowDetails
-                    vm.localVsComputerShowDetails = false
-                    vm.multiplayerShowDetails = false
-                }) {
-                    Text(stringResource(Res.string.local_vs_player))
-                }
-
-                AnimatedVisibility(vm.localVsPlayerShowDetails) {
-                    LocalVsPlayerDetails(
-                        modifier = Modifier.padding(10.dp),
-                        navController = navController,
-                        scope = scope,
-                        snackbarHostState = snackbarHostState,
-                        vm = vm
-                    )
-                }
-
-                OutlinedButton(onClick = {
-                    vm.multiplayerShowDetails = !vm.multiplayerShowDetails
-                    vm.localVsPlayerShowDetails = false
-                    vm.localVsComputerShowDetails = false
-                }) {
-                    Text(stringResource(Res.string.multiplayer))
-                }
-
-                AnimatedVisibility(vm.multiplayerShowDetails) {
-                    MultiplayerDetails(
-                        modifier = Modifier.padding(10.dp),
-                        navController = navController,
-                        scope = scope,
-                        snackbarHostState = snackbarHostState,
-                        vm = vm
-                    )
-                }
-            }
+          Image(painterResource(Res.drawable.ic_branding), null, Modifier.size(90.dp))
         }
+      },
+      snackbarHost = { SnackbarHost(snackbarHostState) },
+    ) {
+      Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+      ) {
+        OutlinedButton(
+          onClick = {
+            vm.localVsComputerShowDetails = !vm.localVsComputerShowDetails
+            vm.localVsPlayerShowDetails = false
+            vm.multiplayerShowDetails = false
+          }
+        ) {
+          Text(stringResource(Res.string.local_vs_computer))
+        }
+
+        AnimatedVisibility(vm.localVsComputerShowDetails) {
+          LocalVsComputerDetails(
+            modifier = Modifier.padding(10.dp),
+            navController = navController,
+            scope = scope,
+            snackbarHostState = snackbarHostState,
+            vm = vm,
+          )
+        }
+
+        OutlinedButton(
+          onClick = {
+            vm.localVsPlayerShowDetails = !vm.localVsPlayerShowDetails
+            vm.localVsComputerShowDetails = false
+            vm.multiplayerShowDetails = false
+          }
+        ) {
+          Text(stringResource(Res.string.local_vs_player))
+        }
+
+        AnimatedVisibility(vm.localVsPlayerShowDetails) {
+          LocalVsPlayerDetails(
+            modifier = Modifier.padding(10.dp),
+            navController = navController,
+            scope = scope,
+            snackbarHostState = snackbarHostState,
+            vm = vm,
+          )
+        }
+
+        OutlinedButton(
+          onClick = {
+            vm.multiplayerShowDetails = !vm.multiplayerShowDetails
+            vm.localVsPlayerShowDetails = false
+            vm.localVsComputerShowDetails = false
+          }
+        ) {
+          Text(stringResource(Res.string.multiplayer))
+        }
+
+        AnimatedVisibility(vm.multiplayerShowDetails) {
+          MultiplayerDetails(
+            modifier = Modifier.padding(10.dp),
+            navController = navController,
+            scope = scope,
+            snackbarHostState = snackbarHostState,
+            vm = vm,
+          )
+        }
+      }
     }
+  }
 }

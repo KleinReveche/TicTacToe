@@ -2,22 +2,16 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "27a64681ce7c58c7f42789e3867d64c0",
+    "identityHash": "3261a0214efd7af4491e5baf98470414",
     "entities": [
       {
         "tableName": "Player",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `playerVsComputerEasyWin` INTEGER NOT NULL, `playerVsComputerEasyLoss` INTEGER NOT NULL, `playerVsComputerEasyDraw` INTEGER NOT NULL, `playerVsComputerNormalWin` INTEGER NOT NULL, `playerVsComputerNormalLoss` INTEGER NOT NULL, `playerVsComputerNormalDraw` INTEGER NOT NULL, `playerVsComputerInsaneWin` INTEGER NOT NULL, `playerVsComputerInsaneLoss` INTEGER NOT NULL, `playerVsComputerInsaneDraw` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `playerVsComputerEasyWin` INTEGER NOT NULL, `playerVsComputerEasyLoss` INTEGER NOT NULL, `playerVsComputerEasyDraw` INTEGER NOT NULL, `playerVsComputerNormalWin` INTEGER NOT NULL, `playerVsComputerNormalLoss` INTEGER NOT NULL, `playerVsComputerNormalDraw` INTEGER NOT NULL, `playerVsComputerInsaneWin` INTEGER NOT NULL, `playerVsComputerInsaneLoss` INTEGER NOT NULL, `playerVsComputerInsaneDraw` INTEGER NOT NULL, PRIMARY KEY(`name`))",
         "fields": [
           {
             "fieldPath": "name",
             "columnName": "name",
             "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -76,15 +70,15 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
-            "id"
+            "name"
           ]
         }
       },
       {
         "tableName": "GameData",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`board` TEXT NOT NULL, `player1Name` TEXT NOT NULL, `player2Name` TEXT NOT NULL, `player1Won` INTEGER NOT NULL, `player2Won` INTEGER NOT NULL, `draw` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`board` TEXT NOT NULL, `player1Name` TEXT NOT NULL, `player2Name` TEXT NOT NULL, `player1Won` INTEGER NOT NULL, `player2Won` INTEGER NOT NULL, `draw` INTEGER NOT NULL, `date` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "board",
@@ -119,6 +113,12 @@
           {
             "fieldPath": "draw",
             "columnName": "draw",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -163,7 +163,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '27a64681ce7c58c7f42789e3867d64c0')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3261a0214efd7af4491e5baf98470414')"
     ]
   }
 }

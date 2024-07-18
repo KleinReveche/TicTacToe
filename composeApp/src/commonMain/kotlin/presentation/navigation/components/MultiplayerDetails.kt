@@ -16,23 +16,23 @@ import presentation.navigation.ScreenMainViewModel
 
 @Composable
 fun MultiplayerDetails(
-    modifier: Modifier = Modifier,
-    navController: NavHostController,
-    scope: CoroutineScope,
-    snackbarHostState: SnackbarHostState,
-    vm: ScreenMainViewModel
+  modifier: Modifier = Modifier,
+  navController: NavHostController,
+  scope: CoroutineScope,
+  snackbarHostState: SnackbarHostState,
+  vm: ScreenMainViewModel,
 ) {
 
-    Column(
-        modifier = modifier.padding(10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+  Column(
+    modifier = modifier.padding(10.dp),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.Center,
+  ) {
+    Row(
+      horizontalArrangement = Arrangement.SpaceAround,
+      verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text("Coming Soon!")
-        }
+      Text("Coming Soon!")
     }
+  }
 }

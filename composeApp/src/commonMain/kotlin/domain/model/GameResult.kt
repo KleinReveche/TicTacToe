@@ -1,7 +1,7 @@
 package domain.model
 
 enum class GameResult {
-    WIN,
-    LOSS,
-    DRAW
+  PLAYER1,
+  PLAYER2,
+  DRAW,
 }

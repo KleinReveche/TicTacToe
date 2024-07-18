@@ -31,95 +31,82 @@ import tictactoe.composeapp.generated.resources.normal
 
 @Composable
 fun LocalVsComputerDetails(
-    modifier: Modifier = Modifier,
-    navController: NavHostController,
-    scope: CoroutineScope,
-    snackbarHostState: SnackbarHostState,
-    vm: ScreenMainViewModel
+  modifier: Modifier = Modifier,
+  navController: NavHostController,
+  scope: CoroutineScope,
+  snackbarHostState: SnackbarHostState,
+  vm: ScreenMainViewModel,
 ) {
-    val computerDifficultyTypes =
-        arrayOf(
-            stringResource(Res.string.easy),
-            stringResource(Res.string.normal),
-            stringResource(Res.string.insane),
-        )
+  val computerDifficultyTypes =
+    arrayOf(
+      stringResource(Res.string.easy),
+      stringResource(Res.string.normal),
+      stringResource(Res.string.insane),
+    )
 
-    Column(
-        modifier = modifier.padding(0.dp, 10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+  Column(
+    modifier = modifier.padding(0.dp, 10.dp),
+    horizontalAlignment = Alignment.CenterHorizontally,
+    verticalArrangement = Arrangement.Center,
+  ) {
+    Row(
+      horizontalArrangement = Arrangement.Center,
+      verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            OutlinedTextField(
-                modifier = modifier.weight(0.65f),
-                value = vm.player1,
-                onValueChange = { vm.player1 = it },
-                label = { Text("Player Name") },
-                singleLine = true
+      OutlinedTextField(
+        modifier = modifier.weight(0.65f),
+        value = vm.player1,
+        onValueChange = { vm.player1 = it },
+        label = { Text("Player Name") },
+        singleLine = true,
+      )
+
+      Button(
+        modifier = modifier.weight(0.35f),
+        onClick = {
+          if (vm.player1 == "") {
+            scope.launch { snackbarHostState.showSnackbar("Please enter a player name.") }
+            return@Button
+          }
+
+          vm.upsertSetting(scope, AppSetting(AppSettings.DEFAULT_PLAYER_VS_COMPUTER, vm.player1))
+
+          navController.navigate(
+            ScreenLocalVsComputer(
+              vm.player1,
+              vm.playerTypes[vm.singleplayerType].toString(),
+              ComputerDifficulty.entries[vm.computerDifficulty].ordinal.toString(),
             )
-
-            Button(
-                modifier = modifier.weight(0.35f),
-                onClick = {
-                    if (vm.player1 == "") {
-                        scope.launch {
-                            snackbarHostState.showSnackbar("Please enter a player name.")
-                        }
-                        return@Button
-                    }
-
-                    vm.upsertSetting(
-                        scope,
-                        AppSetting(
-                            AppSettings.DEFAULT_PLAYER_VS_COMPUTER,
-                            vm.player1
-                        )
-                    )
-
-                    navController.navigate(
-                        ScreenLocalVsComputer(
-                            vm.player1,
-                            vm.playerTypes[vm.singleplayerType].toString(),
-                            ComputerDifficulty.entries[vm.computerDifficulty].ordinal.toString(),
-                        )
-                    )
-                },
-            ) {
-                Text("Play")
-            }
-        }
-
-        SingleChoiceSegmentedButtonRow {
-            vm.playerTypes.forEachIndexed { index, label ->
-                SegmentedButton(
-                    shape = SegmentedButtonDefaults.itemShape(
-                        count = vm.playerTypes.size,
-                        index = index
-                    ),
-                    onClick = { vm.singleplayerType = index },
-                    selected = index == vm.singleplayerType,
-                ) {
-                    Text(label.toString())
-                }
-            }
-        }
-
-        SingleChoiceSegmentedButtonRow {
-            computerDifficultyTypes.forEachIndexed { index, label ->
-                SegmentedButton(
-                    shape = SegmentedButtonDefaults.itemShape(
-                        count = computerDifficultyTypes.size,
-                        index = index
-                    ),
-                    onClick = { vm.computerDifficulty = index },
-                    selected = index == vm.computerDifficulty,
-                ) {
-                    Text(label)
-                }
-            }
-        }
+          )
+        },
+      ) {
+        Text("Play")
+      }
     }
+
+    SingleChoiceSegmentedButtonRow {
+      vm.playerTypes.forEachIndexed { index, label ->
+        SegmentedButton(
+          shape = SegmentedButtonDefaults.itemShape(count = vm.playerTypes.size, index = index),
+          onClick = { vm.singleplayerType = index },
+          selected = index == vm.singleplayerType,
+        ) {
+          Text(label.toString())
+        }
+      }
+    }
+
+    SingleChoiceSegmentedButtonRow {
+      computerDifficultyTypes.forEachIndexed { index, label ->
+        SegmentedButton(
+          shape =
+            SegmentedButtonDefaults.itemShape(count = computerDifficultyTypes.size, index = index),
+          onClick = { vm.computerDifficulty = index },
+          selected = index == vm.computerDifficulty,
+        ) {
+          Text(label)
+        }
+      }
+    }
+  }
 }

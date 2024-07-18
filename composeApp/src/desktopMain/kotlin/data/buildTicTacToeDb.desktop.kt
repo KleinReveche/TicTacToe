@@ -6,9 +6,9 @@ import data.sources.TicTacToeDatabase
 import data.sources.instantiateImpl
 
 fun buildTicTacToeDb(): TicTacToeDatabase =
-    Room.databaseBuilder<TicTacToeDatabase>(
-        name = TicTacToeDatabase.DATABASE_NAME,
-        factory = { TicTacToeDatabase::class.instantiateImpl() },
+  Room.databaseBuilder<TicTacToeDatabase>(
+      name = TicTacToeDatabase.DATABASE_NAME,
+      factory = { TicTacToeDatabase::class.instantiateImpl() },
     )
-        .setDriver(BundledSQLiteDriver())
-        .build()
+    .setDriver(BundledSQLiteDriver())
+    .build()

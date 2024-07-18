@@ -26,31 +26,35 @@ import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import presentation.localvscomputer.ScreenLocalVsComputerViewModel
+import presentation.navigation.NavigationViewModel
 import presentation.navigation.ScreenMainViewModel
 
 expect val ticTacToePlatformModule: Module
 
 val ticTacToeDatabaseSharedModule = module {
-    single { get<TicTacToeDatabase>().playerDao() }.bind<PlayerDao>()
-    single { get<TicTacToeDatabase>().gameDataDao() }.bind<GameDataDao>()
-    single { get<TicTacToeDatabase>().appSettingDao() }.bind<AppSettingDao>()
+  single { get<TicTacToeDatabase>().playerDao() }.bind<PlayerDao>()
+  single { get<TicTacToeDatabase>().gameDataDao() }.bind<GameDataDao>()
+  single { get<TicTacToeDatabase>().appSettingDao() }.bind<AppSettingDao>()
 
-    singleOf(::PlayerRepositoryImpl).bind<PlayerRepository>()
-    singleOf(::UpsertPlayer)
-    singleOf(::DeletePlayer)
-    singleOf(::GetPlayers)
-    singleOf(::GetPlayerByName)
-    singleOf(::PlayerExists)
+  singleOf(::PlayerRepositoryImpl).bind<PlayerRepository>()
+  singleOf(::UpsertPlayer)
+  singleOf(::DeletePlayer)
+  singleOf(::GetPlayers)
+  singleOf(::GetPlayerByName)
+  singleOf(::PlayerExists)
 
-    singleOf(::GameDataRepositoryImpl).bind<GameDataRepository>()
-    singleOf(::UpsertGameData)
-    singleOf(::DeleteGameData)
-    singleOf(::GetAllGameData)
+  singleOf(::GameDataRepositoryImpl).bind<GameDataRepository>()
+  singleOf(::UpsertGameData)
+  singleOf(::DeleteGameData)
+  singleOf(::GetAllGameData)
 
-    singleOf(::AppSettingRepositoryImpl).bind<AppSettingRepository>()
-    singleOf(::UpsertAppSetting)
-    singleOf(::GetAppSettings)
-    singleOf(::GetAppSetting)
+  singleOf(::AppSettingRepositoryImpl).bind<AppSettingRepository>()
+  singleOf(::UpsertAppSetting)
+  singleOf(::GetAppSettings)
+  singleOf(::GetAppSetting)
 
-    singleOf(::ScreenMainViewModel)
+  viewModelOf(::NavigationViewModel)
+  viewModelOf(::ScreenMainViewModel)
+  viewModelOf(::ScreenLocalVsComputerViewModel)
 }
