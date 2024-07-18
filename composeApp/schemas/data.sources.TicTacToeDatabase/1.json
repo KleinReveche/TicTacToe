@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "30cbe821d8edde3230af81dd9f43b19d",
+    "identityHash": "27a64681ce7c58c7f42789e3867d64c0",
     "entities": [
       {
         "tableName": "Player",
@@ -135,11 +135,35 @@
             "id"
           ]
         }
+      },
+      {
+        "tableName": "AppSetting",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`setting` TEXT NOT NULL, `value` TEXT NOT NULL, PRIMARY KEY(`setting`))",
+        "fields": [
+          {
+            "fieldPath": "setting",
+            "columnName": "setting",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "setting"
+          ]
+        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '30cbe821d8edde3230af81dd9f43b19d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '27a64681ce7c58c7f42789e3867d64c0')"
     ]
   }
 }
