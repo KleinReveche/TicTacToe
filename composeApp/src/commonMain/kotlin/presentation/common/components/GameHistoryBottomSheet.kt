@@ -1,6 +1,7 @@
-package presentation.localvscomputer.components
+package presentation.common.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,15 +37,15 @@ import androidx.compose.ui.unit.sp
 import domain.engine.LocalGameEngine
 import domain.model.GameData
 import domain.model.PLAYER_X
-import presentation.common.components.TicTacToeGrid
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScreenLocalVsComputerBottomSheet(
+fun GameHistoryBottomSheet(
   modifier: Modifier = Modifier,
+  header: String,
   onDismissRequest: () -> Unit,
   sheetState: SheetState,
   gameData: List<GameData>,
@@ -57,7 +58,7 @@ fun ScreenLocalVsComputerBottomSheet(
     AnimatedVisibility(!showGameDetails) {
       Column {
         Text(
-          "All Games vs AI",
+          header,
           fontSize = 24.sp,
           textAlign = TextAlign.Center,
           modifier = Modifier.fillMaxWidth().padding(10.dp, 10.dp, 10.dp, 0.dp),
@@ -65,10 +66,13 @@ fun ScreenLocalVsComputerBottomSheet(
         LazyColumn(modifier = Modifier.padding(10.dp)) {
           itemsIndexed(gameData) { index, item ->
             Box(
-              modifier.fillMaxWidth().clickable {
-                selectedIndex = index
-                showGameDetails = !showGameDetails
-              }
+              modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                .clickable {
+                  selectedIndex = index
+                  showGameDetails = !showGameDetails
+                }
             ) {
               val dateFormatted =
                 LocalDateTime.ofInstant(item.date.toInstant(), ZoneId.systemDefault())
@@ -98,7 +102,7 @@ fun ScreenLocalVsComputerBottomSheet(
 
       IconButton(
         onClick = { showGameDetails = !showGameDetails },
-        modifier = Modifier.align(Alignment.Start),
+        modifier = Modifier.align(Alignment.Start).padding(7.dp),
       ) {
         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
       }
@@ -109,11 +113,12 @@ fun ScreenLocalVsComputerBottomSheet(
         verticalArrangement = Arrangement.Center,
       ) {
         Box(
-          Modifier.border(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.primary,
-            shape = RoundedCornerShape(5.dp),
-          )
+          Modifier.padding(16.dp)
+            .border(
+              width = 1.dp,
+              color = MaterialTheme.colorScheme.primary,
+              shape = RoundedCornerShape(5.dp),
+            )
         ) {
           Column(modifier = Modifier.padding(10.dp)) {
             Text("Game Details:", textAlign = TextAlign.Center, fontSize = 18.sp)

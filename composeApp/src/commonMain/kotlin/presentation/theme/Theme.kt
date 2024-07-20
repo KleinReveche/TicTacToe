@@ -1,80 +1,115 @@
 package presentation.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import presentation.theme.uicolors.Default
+import presentation.theme.uicolors.Green
+import presentation.theme.uicolors.Yellow
 
 @Composable
-fun TicTacToeTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-  val colorScheme = if (darkTheme) darkColorScheme else lightColorScheme
+expect fun TicTacToeTheme(
+  dynamicColorAndroid: Boolean = false,
+  uiColorTypes: UIColorTypes = UIColorTypes.Default,
+  darkTheme: Boolean = isSystemInDarkTheme(),
+  oled: Boolean = true,
+  content: @Composable () -> Unit,
+)
 
-  MaterialTheme(colorScheme = colorScheme, content = content)
+fun lightColorScheme(uiColorTypes: UIColorTypes): ColorScheme {
+  val colorType =
+    when (uiColorTypes) {
+      UIColorTypes.Default -> Default
+      UIColorTypes.Yellow -> Yellow
+      UIColorTypes.Green -> Green
+    }
+
+  return lightColorScheme(
+    primary = colorType.primaryLight(),
+    onPrimary = colorType.onPrimaryLight(),
+    primaryContainer = colorType.primaryContainerLight(),
+    onPrimaryContainer = colorType.onPrimaryContainerLight(),
+    inversePrimary = colorType.inversePrimaryLight(),
+    secondary = colorType.secondaryLight(),
+    onSecondary = colorType.onSecondaryLight(),
+    secondaryContainer = colorType.secondaryContainerLight(),
+    onSecondaryContainer = colorType.onSecondaryContainerLight(),
+    tertiary = colorType.tertiaryLight(),
+    onTertiary = colorType.onTertiaryLight(),
+    tertiaryContainer = colorType.tertiaryContainerLight(),
+    onTertiaryContainer = colorType.onTertiaryContainerLight(),
+    background = colorType.backgroundLight(),
+    onBackground = colorType.onBackgroundLight(),
+    surface = colorType.surfaceLight(),
+    onSurface = colorType.onSurfaceLight(),
+    surfaceVariant = colorType.surfaceVariantLight(),
+    onSurfaceVariant = colorType.onSurfaceVariantLight(),
+    surfaceTint = colorType.primaryLight(),
+    inverseSurface = colorType.inverseSurfaceLight(),
+    inverseOnSurface = colorType.inverseOnSurfaceLight(),
+    error = colorType.errorLight(),
+    onError = colorType.onErrorLight(),
+    errorContainer = colorType.errorContainerLight(),
+    onErrorContainer = colorType.onErrorContainerLight(),
+    outline = colorType.outlineLight(),
+    outlineVariant = colorType.outlineVariantLight(),
+    scrim = colorType.scrimLight(),
+    surfaceBright = colorType.surfaceBrightLight(),
+    surfaceContainer = colorType.surfaceContainerLight(),
+    surfaceContainerHigh = colorType.surfaceContainerHighLight(),
+    surfaceContainerHighest = colorType.surfaceContainerHighestLight(),
+    surfaceContainerLow = colorType.surfaceContainerLowLight(),
+    surfaceContainerLowest = colorType.surfaceContainerLowestLight(),
+    surfaceDim = colorType.surfaceDimLight(),
+  )
 }
 
-private val lightColorScheme =
-  lightColorScheme(
-    primary = lightPrimary,
-    onPrimary = lightOnPrimary,
-    primaryContainer = lightPrimaryContainer,
-    onPrimaryContainer = lightOnPrimaryContainer,
-    secondary = lightSecondary,
-    onSecondary = lightOnSecondary,
-    secondaryContainer = lightSecondaryContainer,
-    onSecondaryContainer = lightOnSecondaryContainer,
-    tertiary = lightTertiary,
-    onTertiary = lightOnTertiary,
-    tertiaryContainer = lightTertiaryContainer,
-    onTertiaryContainer = lightOnTertiaryContainer,
-    error = lightError,
-    errorContainer = lightErrorContainer,
-    onError = lightOnError,
-    onErrorContainer = lightOnErrorContainer,
-    background = lightBackground,
-    onBackground = lightOnBackground,
-    surface = lightSurface,
-    onSurface = lightOnSurface,
-    surfaceVariant = lightSurfaceVariant,
-    onSurfaceVariant = lightOnSurfaceVariant,
-    outline = lightOutline,
-    inverseOnSurface = lightInverseOnSurface,
-    inverseSurface = lightInverseSurface,
-    inversePrimary = lightInversePrimary,
-    surfaceTint = lightSurfaceTint,
-    outlineVariant = lightOutlineVariant,
-    scrim = lightScrim,
-  )
+fun darkColorScheme(uiColorTypes: UIColorTypes, oledMode: Boolean): ColorScheme {
+  val colorType =
+    when (uiColorTypes) {
+      UIColorTypes.Default -> Default
+      UIColorTypes.Yellow -> Yellow
+      UIColorTypes.Green -> Green
+    }
 
-private val darkColorScheme =
-  darkColorScheme(
-    primary = darkPrimary,
-    onPrimary = darkOnPrimary,
-    primaryContainer = darkPrimaryContainer,
-    onPrimaryContainer = darkOnPrimaryContainer,
-    secondary = darkSecondary,
-    onSecondary = darkOnSecondary,
-    secondaryContainer = darkSecondaryContainer,
-    onSecondaryContainer = darkOnSecondaryContainer,
-    tertiary = darkTertiary,
-    onTertiary = darkOnTertiary,
-    tertiaryContainer = darkTertiaryContainer,
-    onTertiaryContainer = darkOnTertiaryContainer,
-    error = darkError,
-    errorContainer = darkErrorContainer,
-    onError = darkOnError,
-    onErrorContainer = darkOnErrorContainer,
-    background = darkScrim,
-    onBackground = darkOnBackground,
-    surface = darkScrim,
-    onSurface = darkOnSurface,
-    surfaceVariant = darkSurfaceVariant,
-    onSurfaceVariant = darkOnSurfaceVariant,
-    outline = darkOutline,
-    inverseOnSurface = darkInverseOnSurface,
-    inverseSurface = darkInverseSurface,
-    inversePrimary = darkInversePrimary,
-    surfaceTint = darkSurfaceTint,
-    outlineVariant = darkOutlineVariant,
-    scrim = darkBackground,
+  return darkColorScheme(
+    primary = colorType.primaryDark(),
+    onPrimary = colorType.onPrimaryDark(),
+    primaryContainer = colorType.primaryContainerDark(),
+    onPrimaryContainer = colorType.onPrimaryContainerDark(),
+    inversePrimary = colorType.inversePrimaryDark(),
+    secondary = colorType.secondaryDark(),
+    onSecondary = colorType.onSecondaryDark(),
+    secondaryContainer = colorType.secondaryContainerDark(),
+    onSecondaryContainer = colorType.onSecondaryContainerDark(),
+    tertiary = colorType.tertiaryDark(),
+    onTertiary = colorType.onTertiaryDark(),
+    tertiaryContainer = colorType.tertiaryContainerDark(),
+    onTertiaryContainer = colorType.onTertiaryContainerDark(),
+    background = if (oledMode) colorType.backgroundDark() else colorType.scrimDark(),
+    onBackground = colorType.onBackgroundDark(),
+    surface = if (oledMode) colorType.surfaceDark() else colorType.scrimDark(),
+    onSurface = colorType.onSurfaceDark(),
+    surfaceVariant = colorType.surfaceVariantDark(),
+    onSurfaceVariant = colorType.onSurfaceVariantDark(),
+    surfaceTint = colorType.primaryDark(),
+    inverseSurface = colorType.inverseSurfaceDark(),
+    inverseOnSurface = colorType.inverseOnSurfaceDark(),
+    error = colorType.errorDark(),
+    onError = colorType.onErrorDark(),
+    errorContainer = colorType.errorContainerDark(),
+    onErrorContainer = colorType.onErrorContainerDark(),
+    outline = colorType.outlineDark(),
+    outlineVariant = colorType.outlineVariantDark(),
+    scrim = colorType.scrimDark(),
+    surfaceBright = colorType.surfaceBrightDark(),
+    surfaceContainer = colorType.surfaceContainerDark(),
+    surfaceContainerHigh = colorType.surfaceContainerHighDark(),
+    surfaceContainerHighest = colorType.surfaceContainerHighestDark(),
+    surfaceContainerLow = colorType.surfaceContainerLowDark(),
+    surfaceContainerLowest = colorType.surfaceContainerLowestDark(),
+    surfaceDim = colorType.surfaceDimDark(),
   )
+}

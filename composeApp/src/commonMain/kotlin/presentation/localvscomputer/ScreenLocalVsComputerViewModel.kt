@@ -5,9 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import data.game.ComputerDifficulty
-import domain.cases.GetAllGameData
-import domain.cases.UpsertGameData
-import domain.cases.UpsertPlayer
 import domain.engine.LocalGameEngine
 import domain.engine.LocalGameEngine.isBoardFull
 import domain.engine.LocalGameEngine.isGameWon
@@ -15,6 +12,8 @@ import domain.model.GameResult
 import domain.model.PLAYER_O
 import domain.model.PLAYER_X
 import domain.model.Player
+import domain.repository.GameDataRepository
+import domain.repository.PlayerRepository
 import kotlinx.coroutines.launch
 import presentation.common.LocalViewModel
 
@@ -23,12 +22,11 @@ class ScreenLocalVsComputerViewModel(
   override val player2Name: String,
   private val playerType: Char,
   private val difficulty: ComputerDifficulty,
-  private val upsertPlayer: UpsertPlayer,
-  private val getAllGameData: GetAllGameData,
-  override val upsertGameData: UpsertGameData,
+  private val playerRepository: PlayerRepository,
+  override val gameDataRepository: GameDataRepository,
 ) :
   LocalViewModel(
-    upsertGameData,
+    gameDataRepository,
     player1Name = player1Name,
     player2Name = player2Name,
     player1Type = playerType,
@@ -38,7 +36,7 @@ class ScreenLocalVsComputerViewModel(
   var player: Player? by mutableStateOf(null)
   val computerFirstMove = computerPlayerType == PLAYER_X
   var computerMoveStatus by mutableStateOf(computerFirstMove)
-  val gameData = getAllGameData()
+  val gameData = gameDataRepository.getAllGameData()
 
   fun computerPlay(reset: Boolean) {
     if (reset) reset()
@@ -130,7 +128,7 @@ class ScreenLocalVsComputerViewModel(
         }
       }
 
-      viewModelScope.launch { upsertPlayer(player) }
+      viewModelScope.launch { playerRepository.upsertPlayer(player) }
     }
   }
 

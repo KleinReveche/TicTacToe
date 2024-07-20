@@ -7,17 +7,6 @@ import data.sources.AppSettingDao
 import data.sources.GameDataDao
 import data.sources.PlayerDao
 import data.sources.TicTacToeDatabase
-import domain.cases.DeleteGameData
-import domain.cases.DeletePlayer
-import domain.cases.GetAllGameData
-import domain.cases.GetAppSetting
-import domain.cases.GetAppSettings
-import domain.cases.GetPlayerByName
-import domain.cases.GetPlayers
-import domain.cases.PlayerExists
-import domain.cases.UpsertAppSetting
-import domain.cases.UpsertGameData
-import domain.cases.UpsertPlayer
 import domain.repository.AppSettingRepository
 import domain.repository.GameDataRepository
 import domain.repository.PlayerRepository
@@ -38,21 +27,8 @@ val ticTacToeDatabaseSharedModule = module {
   single { get<TicTacToeDatabase>().appSettingDao() }.bind<AppSettingDao>()
 
   singleOf(::PlayerRepositoryImpl).bind<PlayerRepository>()
-  singleOf(::UpsertPlayer)
-  singleOf(::DeletePlayer)
-  singleOf(::GetPlayers)
-  singleOf(::GetPlayerByName)
-  singleOf(::PlayerExists)
-
   singleOf(::GameDataRepositoryImpl).bind<GameDataRepository>()
-  singleOf(::UpsertGameData)
-  singleOf(::DeleteGameData)
-  singleOf(::GetAllGameData)
-
   singleOf(::AppSettingRepositoryImpl).bind<AppSettingRepository>()
-  singleOf(::UpsertAppSetting)
-  singleOf(::GetAppSettings)
-  singleOf(::GetAppSetting)
 
   viewModelOf(::NavigationViewModel)
   viewModelOf(::ScreenMainViewModel)

@@ -1,7 +1,6 @@
 package data.util
 
 import androidx.room.TypeConverter
-import java.lang.StringBuilder
 import java.util.Date
 
 object Converters {

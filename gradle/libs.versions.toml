@@ -25,6 +25,8 @@ koinComposeMultiplatform = "1.2.0-Beta4"
 lifecycleViewModel = "2.8.3"
 splashscreen = "1.1.0-rc01"
 kotlinx-coroutines = "1.8.1"
+oshiCore = "6.2.2"
+slf4j = "2.0.13"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -56,6 +58,8 @@ androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", versi
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+oshi-core = { module = "com.github.oshi:oshi-core", version.ref = "oshiCore" }
+slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

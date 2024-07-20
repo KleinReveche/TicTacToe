@@ -1,6 +1,6 @@
 package com.kleinreveche.tictactoe
 
-import App
+import TicTacToeApp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,6 +12,6 @@ class MainActivity : ComponentActivity() {
     installSplashScreen()
     enableEdgeToEdge()
     super.onCreate(savedInstanceState)
-    setContent { App() }
+    setContent { TicTacToeApp() }
   }
 }

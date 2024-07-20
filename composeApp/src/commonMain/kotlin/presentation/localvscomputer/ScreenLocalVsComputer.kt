@@ -26,10 +26,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import data.game.ComputerDifficulty
-import domain.cases.GetPlayerByName
 import domain.model.GameResult
 import domain.model.PLAYER_O
 import domain.model.PLAYER_X
+import domain.repository.PlayerRepository
 import kotlin.random.Random
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
@@ -39,9 +39,9 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.parameter.parametersOf
 import presentation.common.components.BackHistoryTopAppBar
+import presentation.common.components.GameHistoryBottomSheet
 import presentation.common.components.StatCounter
 import presentation.common.components.TicTacToeGrid
-import presentation.localvscomputer.components.ScreenLocalVsComputerBottomSheet
 import presentation.navigation.ScreenLocalVsComputer
 import tictactoe.composeapp.generated.resources.Res
 import tictactoe.composeapp.generated.resources.restart
@@ -55,8 +55,8 @@ fun ScreenLocalVsComputer(screenData: ScreenLocalVsComputer, navController: NavC
   val playerName = screenData.playerName
   val playerType = screenData.playerType[0]
   val computerDifficulty = ComputerDifficulty.entries[screenData.difficulty[0].digitToInt()]
-  val getPlayerByName = koinInject<GetPlayerByName>()
-  val player = getPlayerByName(playerName)
+  val playerRepository = koinInject<PlayerRepository>()
+  val player = playerRepository.getPlayerByName(playerName)
   val player1Name = if (playerType == PLAYER_X) playerName else "AI: ${computerDifficulty.name}"
   val player2Name = if (playerType == PLAYER_O) playerName else "AI: ${computerDifficulty.name}"
   val vm =
@@ -65,9 +65,11 @@ fun ScreenLocalVsComputer(screenData: ScreenLocalVsComputer, navController: NavC
     }
   var delayComputerMove by remember { mutableStateOf(true) }
   val gameData =
-    vm.gameData.collectAsState(initial = emptyList()).value.filter { gd ->
-      gd.player1Name.contains("AI") || gd.player2Name.contains("AI")
-    }
+    vm.gameData
+      .collectAsState(initial = emptyList())
+      .value
+      .filter { gd -> gd.player1Name.contains("AI") || gd.player2Name.contains("AI") }
+      .sortedByDescending { it.date }
 
   LaunchedEffect(player) {
     if (vm.player == null) {
@@ -148,7 +150,8 @@ fun ScreenLocalVsComputer(screenData: ScreenLocalVsComputer, navController: NavC
     }
 
     if (showBottomSheet) {
-      ScreenLocalVsComputerBottomSheet(
+      GameHistoryBottomSheet(
+        header = "All Games vs AI",
         onDismissRequest = { showBottomSheet = false },
         sheetState = sheetState,
         gameData = gameData,

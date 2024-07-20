@@ -21,10 +21,13 @@ plugins {
 kotlin {
   androidTarget {
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
-    compilerOptions { jvmTarget.set(JvmTarget.JVM_11) }
+    compilerOptions { jvmTarget.set(JvmTarget.JVM_17) }
   }
 
-  jvm("desktop")
+  @OptIn(ExperimentalKotlinGradlePluginApi::class)
+  jvm("desktop").compilerOptions {
+    jvmTarget.set(JvmTarget.JVM_17)
+  }
 
   sourceSets {
     val desktopMain by getting
@@ -38,6 +41,7 @@ kotlin {
       implementation(libs.koin.android)
       implementation(libs.koin.androidx.compose)
       implementation(libs.kotlinx.coroutines.android)
+      implementation(libs.room.runtime.android)
     }
 
     commonMain.dependencies {
@@ -65,7 +69,11 @@ kotlin {
       implementation(libs.kotlinx.coroutines.swing)
     }
 
-    desktopMain.dependencies { implementation(compose.desktop.currentOs) }
+    desktopMain.dependencies {
+      implementation(compose.desktop.currentOs)
+      implementation(libs.oshi.core)
+      implementation(libs.slf4j.simple)
+    }
   }
 }
 
@@ -87,8 +95,8 @@ android {
   packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
   buildTypes { getByName("release") { isMinifyEnabled = false } }
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
   }
   buildFeatures { compose = true }
   dependencies { debugImplementation(compose.uiTooling) }
@@ -99,9 +107,12 @@ compose.desktop {
     mainClass = "MainKt"
 
     nativeDistributions {
-      targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-      packageName = "com.kleinreveche.tictactoe"
+      targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Exe, TargetFormat.Deb)
+      packageName = "TicTacToe"
       packageVersion = verName
+      description = "Experience the rebirth of the classic Tic-Tac-Toe game!"
+      copyright = "© 2024 Klein Reveche. All rights reserved."
+      vendor = "Klein Reveche"
 
       windows {
         iconFile.set(project.file("src/commonMain/composeResources/drawable/icon_windows.ico"))

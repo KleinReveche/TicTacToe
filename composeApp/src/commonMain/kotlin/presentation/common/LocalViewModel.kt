@@ -6,18 +6,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import domain.cases.UpsertGameData
 import domain.engine.LocalGameEngine.isBoardFull
 import domain.engine.LocalGameEngine.isGameWon
 import domain.model.GameData
 import domain.model.GameResult
 import domain.model.PLAYER_O
 import domain.model.PLAYER_X
+import domain.repository.GameDataRepository
 import java.util.Date
 import kotlinx.coroutines.launch
 
 abstract class LocalViewModel(
-  protected open val upsertGameData: UpsertGameData,
+  protected open val gameDataRepository: GameDataRepository,
   protected open val player1Name: String,
   protected open val player2Name: String,
   protected val player1Type: Char,
@@ -88,7 +88,7 @@ abstract class LocalViewModel(
 
   private fun saveGameData() {
     viewModelScope.launch {
-      upsertGameData(
+      gameDataRepository.upsertGameData(
         GameData(
           board = board,
           player1Name = player1Name,

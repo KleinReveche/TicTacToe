@@ -17,7 +17,7 @@ fun main() {
       title = "TicTacToe",
       icon = painterResource(Res.drawable.icon),
     ) {
-      App()
+      TicTacToeApp()
     }
   }
 }
