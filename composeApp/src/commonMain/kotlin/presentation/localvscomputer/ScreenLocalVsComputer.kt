@@ -17,10 +17,6 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -29,17 +25,16 @@ import data.game.ComputerDifficulty
 import domain.model.GameResult
 import domain.model.PLAYER_O
 import domain.model.PLAYER_X
-import domain.repository.PlayerRepository
 import kotlin.random.Random
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.parameter.parametersOf
 import presentation.common.components.BackHistoryTopAppBar
 import presentation.common.components.GameHistoryBottomSheet
+import presentation.common.components.LocalPlayerDetailsBottomSheet
 import presentation.common.components.StatCounter
 import presentation.common.components.TicTacToeGrid
 import presentation.navigation.ScreenLocalVsComputer
@@ -54,15 +49,13 @@ fun ScreenLocalVsComputer(screenData: ScreenLocalVsComputer, navController: NavC
   val playerName = screenData.playerName
   val playerType = screenData.playerType[0]
   val computerDifficulty = ComputerDifficulty.entries[screenData.difficulty[0].digitToInt()]
-  val playerRepository = koinInject<PlayerRepository>()
-  val player = playerRepository.getPlayerByName(playerName)
   val player1Name = if (playerType == PLAYER_X) playerName else "AI: ${computerDifficulty.name}"
   val player2Name = if (playerType == PLAYER_O) playerName else "AI: ${computerDifficulty.name}"
   val vm =
     koinViewModel<ScreenLocalVsComputerViewModel> {
       parametersOf(player1Name, player2Name, playerType, computerDifficulty)
     }
-  var delayComputerMove by remember { mutableStateOf(true) }
+  val player = vm.getPlayerByName(playerName)
   val gameData =
     vm.gameData
       .collectAsState(initial = emptyList())
@@ -71,7 +64,7 @@ fun ScreenLocalVsComputer(screenData: ScreenLocalVsComputer, navController: NavC
       .sortedByDescending { it.date }
 
   LaunchedEffect(player) {
-    if (vm.player == null) {
+    if (vm.localPlayer == null) {
       vm.updatePlayer(player.first())
     }
   }
@@ -125,6 +118,9 @@ fun ScreenLocalVsComputer(screenData: ScreenLocalVsComputer, navController: NavC
         player1Score = vm.player1Score,
         player2Score = vm.player2Score,
         draw = vm.drawCount,
+        player1Onclick = {
+          if (vm.localPlayer != null) vm.showPlayer1Details = !vm.showPlayer1Details
+        },
       )
       TicTacToeGrid(
         modifier = Modifier,
@@ -156,5 +152,17 @@ fun ScreenLocalVsComputer(screenData: ScreenLocalVsComputer, navController: NavC
         gameData = gameData,
       )
     }
+
+    if (vm.showPlayer1Details) {
+      vm.localPlayer?.let {
+        LocalPlayerDetailsBottomSheet(
+          onDismissRequest = { vm.showPlayer1Details = false },
+          sheetState = sheetState,
+          localPlayer = it,
+          isVsComputer = true,
+        )
+      }
+    }
+    // TODO: SHOW AI TOTAL STATS
   }
 }

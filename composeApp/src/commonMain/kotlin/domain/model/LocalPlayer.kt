@@ -1,10 +1,11 @@
 package domain.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class Player(
+data class LocalPlayer(
   @PrimaryKey val name: String,
   var playerVsComputerEasyWin: Int = 0,
   var playerVsComputerEasyLoss: Int = 0,
@@ -15,4 +16,7 @@ data class Player(
   var playerVsComputerInsaneWin: Int = 0,
   var playerVsComputerInsaneLoss: Int = 0,
   var playerVsComputerInsaneDraw: Int = 0,
+  @ColumnInfo(defaultValue = "0") var playerVsPlayerWin: Int = 0,
+  @ColumnInfo(defaultValue = "0") var playerVsPlayerLoss: Int = 0,
+  @ColumnInfo(defaultValue = "0") var playerVsPlayerDraw: Int = 0,
 )

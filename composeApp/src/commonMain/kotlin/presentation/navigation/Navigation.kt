@@ -9,6 +9,7 @@ import org.koin.compose.KoinContext
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.localvscomputer.ScreenLocalVsComputer
+import presentation.localvsplayer.ScreenLocalVsPlayer
 
 @OptIn(KoinExperimentalAPI::class)
 @Composable
@@ -22,10 +23,14 @@ fun Navigation() {
       composable<ScreenMain> { ScreenMain(navController) }
       composable<ScreenLocalVsComputer> {
         val data = it.toRoute<ScreenLocalVsComputer>()
-        vm.addPlayer(data)
+        vm.addVsComputerPlayer(data)
         ScreenLocalVsComputer(data, navController)
       }
-      composable<ScreenLocalVsPlayer> {}
+      composable<ScreenLocalVsPlayer> {
+        val data = it.toRoute<ScreenLocalVsPlayer>()
+        vm.addVsPlayerPlayers(data)
+        ScreenLocalVsPlayer(data, navController)
+      }
       composable<ScreenMultiplayer> {}
     }
   }

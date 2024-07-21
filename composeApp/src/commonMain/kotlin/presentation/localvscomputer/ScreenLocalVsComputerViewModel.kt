@@ -7,20 +7,20 @@ import androidx.lifecycle.viewModelScope
 import data.game.ComputerDifficulty
 import domain.engine.LocalGameEngine
 import domain.model.GameResult
+import domain.model.LocalPlayer
 import domain.model.PLAYER_O
 import domain.model.PLAYER_X
-import domain.model.Player
 import domain.repository.GameDataRepository
-import domain.repository.PlayerRepository
+import domain.repository.LocalPlayerRepository
 import kotlinx.coroutines.launch
 import presentation.common.LocalViewModel
 
 class ScreenLocalVsComputerViewModel(
-  override val player1Name: String,
-  override val player2Name: String,
+  public override val player1Name: String,
+  public override val player2Name: String,
   private val playerType: Char,
   private val difficulty: ComputerDifficulty,
-  private val playerRepository: PlayerRepository,
+  private val localPlayerRepository: LocalPlayerRepository,
   override val gameDataRepository: GameDataRepository,
 ) :
   LocalViewModel(
@@ -31,12 +31,14 @@ class ScreenLocalVsComputerViewModel(
     player2Type = if (playerType == PLAYER_X) PLAYER_O else PLAYER_X,
   ) {
   private val computerPlayerType = if (playerType == PLAYER_X) PLAYER_O else PLAYER_X
-  var player: Player? by mutableStateOf(null)
+  var localPlayer: LocalPlayer? by mutableStateOf(null)
   var delayComputerMove by mutableStateOf(true)
   val computerFirstMove = computerPlayerType == PLAYER_X
   var computerMoveStatus by mutableStateOf(computerFirstMove)
   val gameData = gameDataRepository.getAllGameData()
   var showGameHistory by mutableStateOf(false)
+  var showPlayer1Details by mutableStateOf(false)
+  var showPlayer2Details by mutableStateOf(false)
 
   fun computerPlay(reset: Boolean) {
     if (reset) reset()
@@ -89,7 +91,7 @@ class ScreenLocalVsComputerViewModel(
   }
 
   private fun updateScore(isPlayer1: Boolean) {
-    player?.let { player ->
+    localPlayer?.let { player ->
       when (difficulty) {
         ComputerDifficulty.Easy -> {
           if (isPlayer1) {
@@ -126,48 +128,50 @@ class ScreenLocalVsComputerViewModel(
         }
       }
 
-      viewModelScope.launch { playerRepository.upsertPlayer(player) }
+      viewModelScope.launch { localPlayerRepository.upsertPlayer(player) }
     }
   }
 
-  fun updatePlayer(player: Player) {
-    player1Score = getScore(player, playerType == PLAYER_X)
-    player2Score = getScore(player, playerType == PLAYER_O)
-    drawCount = getDrawScore(player)
-    this.player = player
+  fun updatePlayer(localPlayer: LocalPlayer) {
+    player1Score = getScore(localPlayer, playerType == PLAYER_X)
+    player2Score = getScore(localPlayer, playerType == PLAYER_O)
+    drawCount = getDrawScore(localPlayer)
+    this.localPlayer = localPlayer
   }
 
-  private fun getScore(player: Player, isPlayer1: Boolean): Int {
+  private fun getScore(localPlayer: LocalPlayer, isPlayer1: Boolean): Int {
     return when (difficulty) {
       ComputerDifficulty.Easy -> {
         if (isPlayer1) {
-          player.playerVsComputerEasyWin
+          localPlayer.playerVsComputerEasyWin
         } else {
-          player.playerVsComputerEasyLoss
+          localPlayer.playerVsComputerEasyLoss
         }
       }
       ComputerDifficulty.Normal -> {
         if (isPlayer1) {
-          player.playerVsComputerNormalWin
+          localPlayer.playerVsComputerNormalWin
         } else {
-          player.playerVsComputerNormalLoss
+          localPlayer.playerVsComputerNormalLoss
         }
       }
       ComputerDifficulty.Insane -> {
         if (isPlayer1) {
-          player.playerVsComputerInsaneWin
+          localPlayer.playerVsComputerInsaneWin
         } else {
-          player.playerVsComputerInsaneLoss
+          localPlayer.playerVsComputerInsaneLoss
         }
       }
     }
   }
 
-  private fun getDrawScore(player: Player): Int {
+  private fun getDrawScore(localPlayer: LocalPlayer): Int {
     return when (difficulty) {
-      ComputerDifficulty.Easy -> player.playerVsComputerEasyDraw
-      ComputerDifficulty.Normal -> player.playerVsComputerNormalDraw
-      ComputerDifficulty.Insane -> player.playerVsComputerInsaneDraw
+      ComputerDifficulty.Easy -> localPlayer.playerVsComputerEasyDraw
+      ComputerDifficulty.Normal -> localPlayer.playerVsComputerNormalDraw
+      ComputerDifficulty.Insane -> localPlayer.playerVsComputerInsaneDraw
     }
   }
+
+  fun getPlayerByName(name: String) = localPlayerRepository.getPlayerByName(name)
 }

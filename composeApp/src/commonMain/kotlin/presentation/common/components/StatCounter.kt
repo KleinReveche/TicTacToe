@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -59,8 +60,11 @@ fun StatCounter(
       horizontalArrangement = Arrangement.Center,
       verticalAlignment = Alignment.CenterVertically,
     ) {
-      val commonBoxModifier =
-        Modifier.weight(0.3f).width(IntrinsicSize.Max).fillMaxHeight().padding(10.dp, 0.dp)
+      val commonBoxModifier = Modifier
+        .weight(0.3f)
+        .width(IntrinsicSize.Max)
+        .fillMaxHeight()
+        .padding(10.dp, 0.dp)
 
       Box(
         commonBoxModifier
@@ -86,7 +90,7 @@ fun StatCounter(
           ) {
             if (player1Onclick != null) player1Onclick()
           },
-        contentAlignment = Alignment.Center,
+        contentAlignment = Alignment.Center
       ) {
         Text(
           text = player1Name,
@@ -105,13 +109,15 @@ fun StatCounter(
         )
       }
 
-      Box(modifier = commonBoxModifier, contentAlignment = Alignment.Center) {
+      Box(
+        modifier = commonBoxModifier,
+        contentAlignment = Alignment.Center
+      ) {
         Text(
           text = "Draw",
           textAlign = TextAlign.Center,
           fontSize = 16.sp,
-          modifier =
-            modifier.padding(textHorizontalPadding, textVerticalPadding).width(IntrinsicSize.Max),
+          modifier = modifier.padding(textHorizontalPadding, textVerticalPadding).width(IntrinsicSize.Max)
         )
       }
 
@@ -139,7 +145,7 @@ fun StatCounter(
           ) {
             if (player2Onclick != null) player2Onclick()
           },
-        contentAlignment = Alignment.Center,
+        contentAlignment = Alignment.Center
       ) {
         Text(
           text = player2Name,

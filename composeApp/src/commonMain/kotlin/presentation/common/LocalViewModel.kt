@@ -20,8 +20,8 @@ abstract class LocalViewModel(
   protected open val gameDataRepository: GameDataRepository,
   protected open val player1Name: String,
   protected open val player2Name: String,
-  protected val player1Type: Char,
-  protected val player2Type: Char,
+  protected open val player1Type: Char,
+  protected open val player2Type: Char,
 ) : ViewModel() {
   var player1Score by mutableStateOf(0)
   var player2Score by mutableStateOf(0)

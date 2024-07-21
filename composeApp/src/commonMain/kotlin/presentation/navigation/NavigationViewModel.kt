@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import domain.model.AppSetting
 import domain.model.AppSettings
-import domain.model.Player
+import domain.model.LocalPlayer
 import domain.repository.AppSettingRepository
-import domain.repository.PlayerRepository
+import domain.repository.LocalPlayerRepository
 import java.util.UUID
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -14,7 +14,7 @@ import kotlinx.coroutines.runBlocking
 
 class NavigationViewModel(
   private val appSettingRepository: AppSettingRepository,
-  private val playerRepository: PlayerRepository,
+  private val localPlayerRepository: LocalPlayerRepository,
 ) : ViewModel() {
   fun saveDeviceIdentifier() {
     viewModelScope.launch {
@@ -30,11 +30,20 @@ class NavigationViewModel(
     }
   }
 
-  fun addPlayer(data: ScreenLocalVsComputer) {
+  fun addVsComputerPlayer(data: ScreenLocalVsComputer) {
     viewModelScope.launch {
       runBlocking {
-        if (playerRepository.playerExists(data.playerName)) return@runBlocking
-        playerRepository.upsertPlayer(Player(name = data.playerName))
+        if (localPlayerRepository.playerExists(data.playerName)) return@runBlocking
+        localPlayerRepository.upsertPlayer(LocalPlayer(name = data.playerName))
+      }
+    }
+  }
+
+  fun addVsPlayerPlayers(data: ScreenLocalVsPlayer) {
+    viewModelScope.launch {
+      runBlocking {
+        appSettingRepository.upsertAppSetting(AppSetting(AppSettings.LAST_PLAYER_1, data.player1))
+        appSettingRepository.upsertAppSetting(AppSetting(AppSettings.LAST_PLAYER_2, data.player2))
       }
     }
   }
