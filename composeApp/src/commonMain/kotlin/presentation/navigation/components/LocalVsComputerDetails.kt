@@ -29,13 +29,13 @@ import presentation.common.components.Header
 import presentation.common.components.TitleAndDescription
 import presentation.navigation.ScreenLocalVsComputer
 import presentation.navigation.ScreenMainViewModel
-import tictactoe.composeapp.generated.resources.Res
-import tictactoe.composeapp.generated.resources.choose_difficulty
-import tictactoe.composeapp.generated.resources.choose_symbol
-import tictactoe.composeapp.generated.resources.easy
-import tictactoe.composeapp.generated.resources.insane
-import tictactoe.composeapp.generated.resources.local_vs_computer
-import tictactoe.composeapp.generated.resources.normal
+import resources.Res
+import resources.choose_difficulty
+import resources.choose_symbol
+import resources.easy
+import resources.insane
+import resources.local_vs_computer
+import resources.normal
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

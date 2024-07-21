@@ -38,9 +38,9 @@ import presentation.common.components.LocalPlayerDetailsBottomSheet
 import presentation.common.components.StatCounter
 import presentation.common.components.TicTacToeGrid
 import presentation.navigation.ScreenLocalVsComputer
-import tictactoe.composeapp.generated.resources.Res
-import tictactoe.composeapp.generated.resources.restart
-import tictactoe.composeapp.generated.resources.start
+import resources.Res
+import resources.restart
+import resources.start
 
 @OptIn(KoinExperimentalAPI::class, ExperimentalMaterial3Api::class)
 @Composable

@@ -30,8 +30,8 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import presentation.common.components.DarkModeSwitch
-import tictactoe.composeapp.generated.resources.Res
-import tictactoe.composeapp.generated.resources.settings
+import resources.Res
+import resources.settings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

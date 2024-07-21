@@ -4,8 +4,8 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import di.initKoin
 import org.jetbrains.compose.resources.painterResource
-import tictactoe.composeapp.generated.resources.Res
-import tictactoe.composeapp.generated.resources.icon
+import resources.Res
+import resources.icon
 
 fun main() {
   initKoin()

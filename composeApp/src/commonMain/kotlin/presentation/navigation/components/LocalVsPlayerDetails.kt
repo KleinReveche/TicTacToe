@@ -23,8 +23,8 @@ import org.jetbrains.compose.resources.stringResource
 import presentation.common.components.Header
 import presentation.navigation.ScreenLocalVsPlayer
 import presentation.navigation.ScreenMainViewModel
-import tictactoe.composeapp.generated.resources.Res
-import tictactoe.composeapp.generated.resources.local_vs_player
+import resources.Res
+import resources.local_vs_player
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

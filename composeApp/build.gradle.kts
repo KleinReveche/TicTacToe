@@ -126,3 +126,9 @@ compose.desktop {
 room { schemaDirectory("$projectDir/schemas") }
 
 dependencies { ksp(libs.room.compiler) }
+
+compose.resources {
+  publicResClass = false
+  packageOfResClass = "resources"
+  generateResClass = always
+}

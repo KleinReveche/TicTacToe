@@ -36,12 +36,12 @@ import presentation.navigation.components.LocalVsPlayerDetails
 import presentation.navigation.components.MultiplayerDetails
 import presentation.navigation.components.SettingsBottomSheet
 import presentation.navigation.components.SettingsTopAppBar
-import tictactoe.composeapp.generated.resources.Res
-import tictactoe.composeapp.generated.resources.app_name
-import tictactoe.composeapp.generated.resources.ic_branding
-import tictactoe.composeapp.generated.resources.local_vs_computer
-import tictactoe.composeapp.generated.resources.local_vs_player
-import tictactoe.composeapp.generated.resources.multiplayer
+import resources.Res
+import resources.app_name
+import resources.ic_branding
+import resources.local_vs_computer
+import resources.local_vs_player
+import resources.multiplayer
 
 @OptIn(KoinExperimentalAPI::class, ExperimentalMaterial3Api::class)
 @Composable

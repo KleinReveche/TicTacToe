@@ -39,11 +39,11 @@ import org.jetbrains.compose.resources.painterResource
 import presentation.theme.BlueSky
 import presentation.theme.BorderColor
 import presentation.theme.NightSky
-import tictactoe.composeapp.generated.resources.Res
-import tictactoe.composeapp.generated.resources.day_night_switch_background
-import tictactoe.composeapp.generated.resources.day_night_switch_glow
-import tictactoe.composeapp.generated.resources.day_night_switch_moon
-import tictactoe.composeapp.generated.resources.day_night_switch_sun
+import resources.Res
+import resources.day_night_switch_background
+import resources.day_night_switch_glow
+import resources.day_night_switch_moon
+import resources.day_night_switch_sun
 
 /** Credits to jurajkusnier @ https://github.com/jurajkusnier/drak-mode-switch * */
 @Composable

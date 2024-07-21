@@ -28,10 +28,10 @@ import androidx.compose.ui.unit.dp
 import domain.model.PLAYER_O
 import domain.model.PLAYER_X
 import org.jetbrains.compose.resources.painterResource
-import tictactoe.composeapp.generated.resources.Res
-import tictactoe.composeapp.generated.resources.ic_blank
-import tictactoe.composeapp.generated.resources.ic_o
-import tictactoe.composeapp.generated.resources.ic_x
+import resources.Res
+import resources.ic_blank
+import resources.ic_o
+import resources.ic_x
 
 @Composable
 fun TicTacToeButton(

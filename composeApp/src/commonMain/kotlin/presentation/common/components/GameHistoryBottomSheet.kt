@@ -38,8 +38,8 @@ import domain.engine.LocalGameEngine
 import domain.model.GameData
 import domain.model.PLAYER_X
 import org.jetbrains.compose.resources.stringResource
-import tictactoe.composeapp.generated.resources.Res
-import tictactoe.composeapp.generated.resources.no_game_history
+import resources.Res
+import resources.no_game_history
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
