@@ -1,10 +1,13 @@
 <resources>
     <string name="app_name">TicTacToe</string>
-    <string name="local_vs_computer">Local Vs Computer</string>
-    <string name="local_vs_player">Local Vs Player</string>
+    <string name="local_vs_computer">You vs AI</string>
+    <string name="local_vs_player">Pass 'n Play</string>
     <string name="multiplayer">Multiplayer</string>
     <string name="player_name">Player Name</string>
     <string name="play">Play</string>
+    <string name="no_game_history">No games found.</string>
+    <string name="choose_symbol">Choose your symbol:</string>
+    <string name="choose_difficulty">Choose difficulty:</string>
     <string name="computer_easy">Computer: Easy</string>
     <string name="computer_normal">Computer: Normal</string>
     <string name="computer_insane">Computer: Insane</string>

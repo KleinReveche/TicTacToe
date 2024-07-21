@@ -37,6 +37,9 @@ import androidx.compose.ui.unit.sp
 import domain.engine.LocalGameEngine
 import domain.model.GameData
 import domain.model.PLAYER_X
+import org.jetbrains.compose.resources.stringResource
+import tictactoe.composeapp.generated.resources.Res
+import tictactoe.composeapp.generated.resources.no_game_history
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -63,27 +66,36 @@ fun GameHistoryBottomSheet(
           textAlign = TextAlign.Center,
           modifier = Modifier.fillMaxWidth().padding(10.dp, 10.dp, 10.dp, 0.dp),
         )
-        LazyColumn(modifier = Modifier.padding(10.dp)) {
-          itemsIndexed(gameData) { index, item ->
-            Box(
-              modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                .clickable {
-                  selectedIndex = index
-                  showGameDetails = !showGameDetails
-                }
-            ) {
-              val dateFormatted =
-                LocalDateTime.ofInstant(item.date.toInstant(), ZoneId.systemDefault())
-                  .format(formatter)
-              Text(
-                text = "$dateFormatted - ${item.player1Name} vs ${item.player2Name}",
-                fontSize = 18.sp,
-                modifier = Modifier.fillMaxWidth().padding(16.dp, 8.dp, 16.dp, 8.dp),
-              )
+        if (gameData.isNotEmpty()) {
+          LazyColumn(modifier = Modifier.padding(10.dp)) {
+            itemsIndexed(gameData) { index, item ->
+              Box(
+                modifier
+                  .fillMaxWidth()
+                  .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                  .clickable {
+                    selectedIndex = index
+                    showGameDetails = !showGameDetails
+                  }
+              ) {
+                val dateFormatted =
+                  LocalDateTime.ofInstant(item.date.toInstant(), ZoneId.systemDefault())
+                    .format(formatter)
+                Text(
+                  text = "$dateFormatted - ${item.player1Name} vs ${item.player2Name}",
+                  fontSize = 18.sp,
+                  modifier = Modifier.fillMaxWidth().padding(16.dp, 8.dp, 16.dp, 8.dp),
+                )
+              }
             }
           }
+        } else {
+          Text(
+            stringResource(Res.string.no_game_history),
+            fontSize = 18.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth().padding(10.dp),
+          )
         }
       }
     }

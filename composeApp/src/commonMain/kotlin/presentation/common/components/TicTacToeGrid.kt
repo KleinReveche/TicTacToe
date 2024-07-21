@@ -25,7 +25,7 @@ fun TicTacToeGrid(
   board: Array<Char?>,
   onclick: (Int) -> Unit,
   windowSize: WindowSizeClass = calculateWindowSizeClass(),
-  clickable: Boolean = false,
+  clickable: Boolean = true,
   winningMoves: List<Int>,
   color: Color = MaterialTheme.colorScheme.background,
 ) {
@@ -54,7 +54,7 @@ fun TicTacToeGrid(
             onclick = { onclick(index) },
             windowSize = windowSize,
             isWinningMove = winningMoves.contains(index),
-            connecting = clickable,
+            clickable = clickable,
             color = color,
           )
         }

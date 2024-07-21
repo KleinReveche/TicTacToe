@@ -2,18 +2,28 @@ package presentation.navigation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -26,6 +36,8 @@ import domain.repository.AppSettingRepository
 import getPlatform
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
+import presentation.common.components.Header
+import presentation.common.components.TitleAndDescription
 import presentation.theme.UIColorTypes
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,72 +84,88 @@ fun SettingsBottomSheet(
     if (isDynamicColorAndroid) 0 else themeOptions.indexOf(currentUiColorType.name)
 
   ModalBottomSheet(onDismissRequest = onDismissRequest, sheetState = sheetState) {
+    var expanded by remember { mutableStateOf(false) }
     Column(
       modifier = modifier.fillMaxWidth().padding(15.dp),
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.Center,
     ) {
-      Text(
-        text = "Settings",
-        modifier = Modifier.fillMaxWidth().padding(10.dp),
-        fontSize = 24.sp,
-        fontWeight = FontWeight.Bold,
-        textAlign = TextAlign.Center,
-      )
+      Header(text = "Settings")
 
-      TitleAndDescription("Theme", "Choose overall app theme.")
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+      ) {
+        TitleAndDescription("Theme", "Choose overall app theme.")
 
-      SingleChoiceSegmentedButtonRow {
-        themeOptions.forEachIndexed { index, themeOption ->
-          SegmentedButton(
-            shape = SegmentedButtonDefaults.itemShape(count = themeOptions.size, index = index),
-            onClick = {
-              if (index == 0 && isAndroidPlatformWithDynamicColorSupport) {
-                coroutineScope.launch {
-                  appSettingRepository.upsertAppSetting(
-                    AppSetting(AppSettings.DYNAMIC_COLOR_ANDROID, "true")
-                  )
-                }
-              } else {
-                val selectedTheme =
-                  if (isAndroidPlatformWithDynamicColorSupport) {
-                    UIColorTypes.entries[index - 1]
+        ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
+          TextField(
+            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
+            value = UIColorTypes.entries[currentThemeIndex].name,
+            onValueChange = {},
+            readOnly = true,
+            singleLine = true,
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            colors = ExposedDropdownMenuDefaults.textFieldColors(),
+          )
+          ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            themeOptions.forEachIndexed { index, themeOption ->
+              DropdownMenuItem(
+                text = { Text(themeOption) },
+                onClick = {
+                  if (index == 0 && isAndroidPlatformWithDynamicColorSupport) {
+                    coroutineScope.launch {
+                      appSettingRepository.upsertAppSetting(
+                        AppSetting(AppSettings.DYNAMIC_COLOR_ANDROID, "true")
+                      )
+                    }
                   } else {
-                    UIColorTypes.entries[index]
+                    val selectedTheme =
+                      if (isAndroidPlatformWithDynamicColorSupport) {
+                        UIColorTypes.entries[index - 1]
+                      } else {
+                        UIColorTypes.entries[index]
+                      }
+                    coroutineScope.launch {
+                      appSettingRepository.upsertAppSetting(
+                        AppSetting(AppSettings.UI_COLOR_TYPE, selectedTheme.name)
+                      )
+                      appSettingRepository.upsertAppSetting(
+                        AppSetting(AppSettings.DYNAMIC_COLOR_ANDROID, "false")
+                      )
+                    }
                   }
-                coroutineScope.launch {
-                  appSettingRepository.upsertAppSetting(
-                    AppSetting(AppSettings.UI_COLOR_TYPE, selectedTheme.name)
-                  )
-                  appSettingRepository.upsertAppSetting(
-                    AppSetting(AppSettings.DYNAMIC_COLOR_ANDROID, "false")
-                  )
-                }
-              }
-            },
-            selected = index == currentThemeIndex,
-          ) {
-            Text(text = themeOption, modifier = Modifier.padding(5.dp, 0.dp))
+                },
+                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+              )
+            }
           }
         }
       }
 
-      TitleAndDescription("OLED Mode", "Enable true black for dark mode.")
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+      ) {
+        TitleAndDescription("OLED Mode", "Enable true black for dark mode.")
 
-      SingleChoiceSegmentedButtonRow {
-        oledOptions.forEachIndexed { index, oledOption ->
-          SegmentedButton(
-            shape = SegmentedButtonDefaults.itemShape(count = oledOptions.size, index = index),
-            onClick = {
-              coroutineScope.launch {
-                appSettingRepository.upsertAppSetting(
-                  AppSetting(AppSettings.OLED, (!currentOledOption.toBoolean()).toString())
-                )
-              }
-            },
-            selected = index == (if (currentOledOption.toBoolean()) 1 else 0),
-          ) {
-            Text(text = oledOption, modifier = Modifier.padding(5.dp, 0.dp))
+        SingleChoiceSegmentedButtonRow {
+          oledOptions.forEachIndexed { index, oledOption ->
+            SegmentedButton(
+              shape = SegmentedButtonDefaults.itemShape(count = oledOptions.size, index = index),
+              onClick = {
+                coroutineScope.launch {
+                  appSettingRepository.upsertAppSetting(
+                    AppSetting(AppSettings.OLED, (!currentOledOption.toBoolean()).toString())
+                  )
+                }
+              },
+              selected = index == (if (currentOledOption.toBoolean()) 1 else 0),
+            ) {
+              Text(text = oledOption, modifier = Modifier.padding(5.dp, 0.dp))
+            }
           }
         }
       }
@@ -151,22 +179,4 @@ fun SettingsBottomSheet(
       )
     }
   }
-}
-
-@Composable
-private fun TitleAndDescription(title: String, description: String) {
-  Text(
-    text = title,
-    modifier = Modifier.fillMaxWidth().padding(15.dp, 10.dp, 15.dp, 0.dp),
-    fontSize = 18.sp,
-    fontWeight = FontWeight.SemiBold,
-    textAlign = TextAlign.Left,
-  )
-  Text(
-    text = description,
-    modifier = Modifier.fillMaxWidth().padding(15.dp, 0.dp, 15.dp, 10.dp),
-    fontSize = 12.sp,
-    fontWeight = FontWeight.Normal,
-    textAlign = TextAlign.Left,
-  )
 }

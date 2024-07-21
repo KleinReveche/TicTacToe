@@ -12,13 +12,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BackHistoryTopAppBar(text: String, navController: NavController, onClick: () -> Unit) {
   CenterAlignedTopAppBar(
-    title = { Text(text) },
+    title = { Text(text = text, textAlign = TextAlign.Center) },
     modifier = Modifier.background(MaterialTheme.colorScheme.surfaceTint),
     navigationIcon = {
       IconButton(onClick = { navController.popBackStack() }) {

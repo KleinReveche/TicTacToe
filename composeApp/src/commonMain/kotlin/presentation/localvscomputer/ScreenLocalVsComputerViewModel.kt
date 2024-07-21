@@ -6,8 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import data.game.ComputerDifficulty
 import domain.engine.LocalGameEngine
-import domain.engine.LocalGameEngine.isBoardFull
-import domain.engine.LocalGameEngine.isGameWon
 import domain.model.GameResult
 import domain.model.PLAYER_O
 import domain.model.PLAYER_X
@@ -34,9 +32,11 @@ class ScreenLocalVsComputerViewModel(
   ) {
   private val computerPlayerType = if (playerType == PLAYER_X) PLAYER_O else PLAYER_X
   var player: Player? by mutableStateOf(null)
+  var delayComputerMove by mutableStateOf(true)
   val computerFirstMove = computerPlayerType == PLAYER_X
   var computerMoveStatus by mutableStateOf(computerFirstMove)
   val gameData = gameDataRepository.getAllGameData()
+  var showGameHistory by mutableStateOf(false)
 
   fun computerPlay(reset: Boolean) {
     if (reset) reset()
@@ -60,29 +60,27 @@ class ScreenLocalVsComputerViewModel(
     play(nextMove)
   }
 
-  private fun updateWinCounters(board: Array<Char?>) {
-    when {
-      isGameWon(board, PLAYER_X).isGameWon -> {
+  private fun updateWinCounters(result: GameResult?) {
+    when (result) {
+      GameResult.PLAYER1 -> {
         player1Score++
         updateScore(PLAYER_X == playerType)
-        winningResult = if (playerType == PLAYER_X) GameResult.PLAYER1 else GameResult.PLAYER2
       }
-      isGameWon(board, PLAYER_O).isGameWon -> {
+      GameResult.PLAYER2 -> {
         player2Score++
         updateScore(PLAYER_O == playerType)
-        winningResult = if (playerType == PLAYER_O) GameResult.PLAYER1 else GameResult.PLAYER2
       }
-      isBoardFull(board) -> {
+      GameResult.DRAW -> {
         drawCount++
         updateScore(true)
-        winningResult = GameResult.DRAW
       }
+      null -> return
     }
   }
 
   override fun play(move: Int) {
     super.play(move)
-    updateWinCounters(board)
+    updateWinCounters(winningResult)
   }
 
   override fun reset() {

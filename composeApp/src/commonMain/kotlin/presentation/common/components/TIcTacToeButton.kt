@@ -39,7 +39,7 @@ fun TicTacToeButton(
   onclick: () -> Unit,
   windowSize: WindowSizeClass,
   isWinningMove: Boolean = false,
-  connecting: Boolean = false,
+  clickable: Boolean = true,
   color: Color = MaterialTheme.colorScheme.background,
 ) {
   Box(
@@ -70,7 +70,7 @@ fun TicTacToeButton(
       .clickable(
         indication = if (text == null) LocalIndication.current else null,
         interactionSource = remember { MutableInteractionSource() },
-        enabled = text == null && !connecting,
+        enabled = text == null && clickable,
       ) {
         if (text == null) onclick()
       },

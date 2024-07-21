@@ -51,7 +51,6 @@ import tictactoe.composeapp.generated.resources.start
 @Composable
 fun ScreenLocalVsComputer(screenData: ScreenLocalVsComputer, navController: NavController) {
   val sheetState = rememberModalBottomSheetState()
-  var showBottomSheet by remember { mutableStateOf(false) }
   val playerName = screenData.playerName
   val playerType = screenData.playerType[0]
   val computerDifficulty = ComputerDifficulty.entries[screenData.difficulty[0].digitToInt()]
@@ -68,7 +67,7 @@ fun ScreenLocalVsComputer(screenData: ScreenLocalVsComputer, navController: NavC
     vm.gameData
       .collectAsState(initial = emptyList())
       .value
-      .filter { gd -> gd.player1Name.contains("AI") || gd.player2Name.contains("AI") }
+      .filter { gd -> listOf(gd.player1Name, gd.player2Name).any { it.startsWith("AI") } }
       .sortedByDescending { it.date }
 
   LaunchedEffect(player) {
@@ -77,7 +76,7 @@ fun ScreenLocalVsComputer(screenData: ScreenLocalVsComputer, navController: NavC
     }
   }
 
-  LaunchedEffect(delayComputerMove) {
+  LaunchedEffect(vm.delayComputerMove) {
     if (vm.roundCount == 0) return@LaunchedEffect
     vm.computerMoveStatus = true
     val randomMaxDelay =
@@ -93,7 +92,7 @@ fun ScreenLocalVsComputer(screenData: ScreenLocalVsComputer, navController: NavC
   Scaffold(
     topBar = {
       BackHistoryTopAppBar("$playerName vs AI", navController) {
-        showBottomSheet = !showBottomSheet
+        vm.showGameHistory = !vm.showGameHistory
       }
     },
     floatingActionButton = {
@@ -135,11 +134,11 @@ fun ScreenLocalVsComputer(screenData: ScreenLocalVsComputer, navController: NavC
             vm.computerPlay(true)
           } else {
             vm.play(it)
-            if (!vm.isGameOver) delayComputerMove = !delayComputerMove
+            if (!vm.isGameOver) vm.delayComputerMove = !vm.delayComputerMove
           }
         },
         winningMoves = vm.winningMoves,
-        clickable = vm.computerMoveStatus,
+        clickable = !vm.computerMoveStatus,
         color =
           when (vm.winningResult) {
             GameResult.PLAYER1 -> MaterialTheme.colorScheme.primaryContainer
@@ -149,10 +148,10 @@ fun ScreenLocalVsComputer(screenData: ScreenLocalVsComputer, navController: NavC
       )
     }
 
-    if (showBottomSheet) {
+    if (vm.showGameHistory) {
       GameHistoryBottomSheet(
         header = "All Games vs AI",
-        onDismissRequest = { showBottomSheet = false },
+        onDismissRequest = { vm.showGameHistory = false },
         sheetState = sheetState,
         gameData = gameData,
       )
