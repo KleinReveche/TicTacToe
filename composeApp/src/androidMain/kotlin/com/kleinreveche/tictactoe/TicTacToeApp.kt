@@ -5,8 +5,8 @@ import di.initKoin
 import org.koin.android.ext.koin.androidContext
 
 class TicTacToeApp : Application() {
-  override fun onCreate() {
-    super.onCreate()
-    initKoin { androidContext(this@TicTacToeApp) }
-  }
+    override fun onCreate() {
+        super.onCreate()
+        initKoin { androidContext(this@TicTacToeApp) }
+    }
 }

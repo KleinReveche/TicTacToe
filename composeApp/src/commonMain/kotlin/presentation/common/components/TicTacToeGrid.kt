@@ -21,44 +21,44 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun TicTacToeGrid(
-  modifier: Modifier = Modifier,
-  board: Array<Char?>,
-  onclick: (Int) -> Unit,
-  windowSize: WindowSizeClass = calculateWindowSizeClass(),
-  clickable: Boolean = true,
-  winningMoves: List<Int>,
-  color: Color = MaterialTheme.colorScheme.background,
+    modifier: Modifier = Modifier,
+    board: Array<Char?>,
+    onclick: (Int) -> Unit,
+    windowSize: WindowSizeClass = calculateWindowSizeClass(),
+    clickable: Boolean = true,
+    winningMoves: List<Int>,
+    color: Color = MaterialTheme.colorScheme.background,
 ) {
-  Box(modifier = modifier, contentAlignment = Alignment.Center) {
-    Column(Modifier.padding(vertical = 1.dp)) {
-      val rows = 3
-      val columns = 3
-      val buttonSize =
-        when (windowSize.heightSizeClass) {
-          WindowHeightSizeClass.Compact -> 125.dp
-          WindowHeightSizeClass.Medium -> 150.dp
-          else -> 175.dp
-        }
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+        Column(Modifier.padding(vertical = 1.dp)) {
+            val rows = 3
+            val columns = 3
+            val buttonSize =
+                when (windowSize.heightSizeClass) {
+                    WindowHeightSizeClass.Compact -> 125.dp
+                    WindowHeightSizeClass.Medium -> 150.dp
+                    else -> 175.dp
+                }
 
-      val gridModifier =
-        if (windowSize.heightSizeClass == WindowHeightSizeClass.Compact) {
-          Modifier.width(buttonSize * columns).height(buttonSize * rows)
-        } else {
-          Modifier.width(buttonSize * columns).height(buttonSize * rows)
-        }
+            val gridModifier =
+                if (windowSize.heightSizeClass == WindowHeightSizeClass.Compact) {
+                    Modifier.width(buttonSize * columns).height(buttonSize * rows)
+                } else {
+                    Modifier.width(buttonSize * columns).height(buttonSize * rows)
+                }
 
-      LazyVerticalGrid(columns = GridCells.Fixed(columns), modifier = gridModifier) {
-        items(board.size) { index ->
-          TicTacToeButton(
-            text = board[index],
-            onclick = { onclick(index) },
-            windowSize = windowSize,
-            isWinningMove = winningMoves.contains(index),
-            clickable = clickable,
-            color = color,
-          )
+            LazyVerticalGrid(columns = GridCells.Fixed(columns), modifier = gridModifier) {
+                items(board.size) { index ->
+                    TicTacToeButton(
+                        text = board[index],
+                        onclick = { onclick(index) },
+                        windowSize = windowSize,
+                        isWinningMove = winningMoves.contains(index),
+                        clickable = clickable,
+                        color = color,
+                    )
+                }
+            }
         }
-      }
     }
-  }
 }

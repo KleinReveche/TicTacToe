@@ -8,16 +8,16 @@ import resources.Res
 import resources.icon
 
 fun main() {
-  initKoin()
+    initKoin()
 
-  application {
-    Window(
-      onCloseRequest = ::exitApplication,
-      state = rememberWindowState(width = 800.dp, height = 800.dp),
-      title = "TicTacToe",
-      icon = painterResource(Res.drawable.icon),
-    ) {
-      TicTacToeApp()
+    application {
+        Window(
+            onCloseRequest = ::exitApplication,
+            state = rememberWindowState(width = 800.dp, height = 800.dp),
+            title = "TicTacToe",
+            icon = painterResource(Res.drawable.icon),
+        ) {
+            TicTacToeApp()
+        }
     }
-  }
 }

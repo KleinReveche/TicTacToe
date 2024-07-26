@@ -15,14 +15,18 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BackTopAppBar(text: String, navController: NavController) {
-  CenterAlignedTopAppBar(
-    title = { Text(text) },
-    modifier = Modifier.background(MaterialTheme.colorScheme.surfaceTint),
-    navigationIcon = {
-      IconButton(onClick = { navController.popBackStack() }) {
-        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-      }
-    },
-  )
+fun BackTopAppBar(
+    modifier: Modifier = Modifier,
+    text: String,
+    navController: NavController,
+) {
+    CenterAlignedTopAppBar(
+        title = { Text(text) },
+        modifier = modifier.background(MaterialTheme.colorScheme.surfaceTint),
+        navigationIcon = {
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+            }
+        },
+    )
 }

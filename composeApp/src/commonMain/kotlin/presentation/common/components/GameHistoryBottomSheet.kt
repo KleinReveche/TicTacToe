@@ -40,122 +40,119 @@ import domain.model.PLAYER_X
 import org.jetbrains.compose.resources.stringResource
 import resources.Res
 import resources.no_game_history
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+import toDefaultFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameHistoryBottomSheet(
-  modifier: Modifier = Modifier,
-  header: String,
-  onDismissRequest: () -> Unit,
-  sheetState: SheetState,
-  gameData: List<GameData>,
+    modifier: Modifier = Modifier,
+    header: String,
+    onDismissRequest: () -> Unit,
+    sheetState: SheetState,
+    gameData: List<GameData>,
 ) {
-  var selectedIndex by remember { mutableIntStateOf(-1) }
-  var showGameDetails by remember { mutableStateOf(false) }
-  val formatter = DateTimeFormatter.ofPattern("MM/dd/yy HH:mm")
+    var selectedIndex by remember { mutableIntStateOf(-1) }
+    var showGameDetails by remember { mutableStateOf(false) }
 
-  ModalBottomSheet(onDismissRequest = onDismissRequest, sheetState = sheetState) {
-    AnimatedVisibility(!showGameDetails) {
-      Column {
-        Text(
-          header,
-          fontSize = 24.sp,
-          textAlign = TextAlign.Center,
-          modifier = Modifier.fillMaxWidth().padding(10.dp, 10.dp, 10.dp, 0.dp),
-        )
-        if (gameData.isNotEmpty()) {
-          LazyColumn(modifier = Modifier.padding(10.dp)) {
-            itemsIndexed(gameData) { index, item ->
-              Box(
-                modifier
-                  .fillMaxWidth()
-                  .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                  .clickable {
-                    selectedIndex = index
-                    showGameDetails = !showGameDetails
-                  }
-              ) {
-                val dateFormatted =
-                  LocalDateTime.ofInstant(item.date.toInstant(), ZoneId.systemDefault())
-                    .format(formatter)
+    ModalBottomSheet(onDismissRequest = onDismissRequest, sheetState = sheetState) {
+        AnimatedVisibility(!showGameDetails) {
+            Column {
                 Text(
-                  text = "$dateFormatted - ${item.player1Name} vs ${item.player2Name}",
-                  fontSize = 18.sp,
-                  modifier = Modifier.fillMaxWidth().padding(16.dp, 8.dp, 16.dp, 8.dp),
+                    header,
+                    fontSize = 24.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth().padding(10.dp, 10.dp, 10.dp, 0.dp),
                 )
-              }
+                if (gameData.isNotEmpty()) {
+                    LazyColumn(modifier = Modifier.padding(10.dp)) {
+                        itemsIndexed(gameData) { index, item ->
+                            Box(
+                                modifier
+                                    .fillMaxWidth()
+                                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                                    .clickable {
+                                        selectedIndex = index
+                                        showGameDetails = !showGameDetails
+                                    },
+                            ) {
+                                val dateFormatted = item.date.toDefaultFormat()
+                                Text(
+                                    text = "$dateFormatted - ${item.player1Name} vs ${item.player2Name}",
+                                    fontSize = 18.sp,
+                                    modifier =
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp, 8.dp, 16.dp, 8.dp),
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    Text(
+                        stringResource(Res.string.no_game_history),
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth().padding(10.dp),
+                    )
+                }
             }
-          }
-        } else {
-          Text(
-            stringResource(Res.string.no_game_history),
-            fontSize = 18.sp,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth().padding(10.dp),
-          )
         }
-      }
-    }
-    AnimatedVisibility(showGameDetails) {
-      val selectedItem = gameData[selectedIndex]
-      val winningMoves = LocalGameEngine.isGameWon(selectedItem.board, PLAYER_X).winningMoves
-      val formattedDate =
-        LocalDateTime.ofInstant(selectedItem.date.toInstant(), ZoneId.systemDefault())
-          .format(formatter)
-      val winner =
-        when {
-          selectedItem.player1Won -> selectedItem.player1Name + " won!"
-          selectedItem.player2Won -> selectedItem.player2Name + " won!"
-          else -> "Draw"
-        }
+        AnimatedVisibility(showGameDetails) {
+            val selectedItem = gameData[selectedIndex]
+            val winningMoves = LocalGameEngine.isGameWon(selectedItem.board, PLAYER_X).winningMoves
+            val formattedDate = selectedItem.date.toDefaultFormat()
+            val winner =
+                when {
+                    selectedItem.player1Won -> selectedItem.player1Name + " won!"
+                    selectedItem.player2Won -> selectedItem.player2Name + " won!"
+                    else -> "Draw"
+                }
 
-      IconButton(
-        onClick = { showGameDetails = !showGameDetails },
-        modifier = Modifier.align(Alignment.Start).padding(7.dp),
-      ) {
-        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-      }
+            IconButton(
+                onClick = { showGameDetails = !showGameDetails },
+                modifier = Modifier.align(Alignment.Start).padding(7.dp),
+            ) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+            }
 
-      Column(
-        modifier = Modifier.fillMaxWidth().padding(10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-      ) {
-        Box(
-          Modifier.padding(16.dp)
-            .border(
-              width = 1.dp,
-              color = MaterialTheme.colorScheme.primary,
-              shape = RoundedCornerShape(5.dp),
-            )
-        ) {
-          Column(modifier = Modifier.padding(10.dp)) {
-            Text("Game Details:", textAlign = TextAlign.Center, fontSize = 18.sp)
-            Spacer(modifier = Modifier.height(5.dp))
-            Text(formattedDate, fontSize = 15.sp)
-            Text("Player 1 - ${selectedItem.player1Name}", fontSize = 16.sp)
-            Text("Player 2 - ${selectedItem.player2Name}", fontSize = 16.sp)
-            Spacer(modifier = Modifier.height(5.dp))
-            Text("Result: $winner", fontSize = 16.sp)
-          }
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Box(
+                    Modifier
+                        .padding(16.dp)
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.primary,
+                            shape = RoundedCornerShape(5.dp),
+                        ),
+                ) {
+                    Column(modifier = Modifier.padding(10.dp)) {
+                        Text("Game Details:", textAlign = TextAlign.Center, fontSize = 18.sp)
+                        Spacer(modifier = Modifier.height(5.dp))
+                        Text(formattedDate, fontSize = 15.sp)
+                        Text("Player 1 - ${selectedItem.player1Name}", fontSize = 16.sp)
+                        Text("Player 2 - ${selectedItem.player2Name}", fontSize = 16.sp)
+                        Spacer(modifier = Modifier.height(5.dp))
+                        Text("Result: $winner", fontSize = 16.sp)
+                    }
+                }
+                TicTacToeGrid(
+                    modifier = Modifier.fillMaxWidth(),
+                    board = selectedItem.board,
+                    onclick = {},
+                    winningMoves = winningMoves,
+                    clickable = false,
+                    color =
+                        when {
+                            winner.contains("AI") -> MaterialTheme.colorScheme.errorContainer
+                            !winner.contains("AI") -> MaterialTheme.colorScheme.primaryContainer
+                            else -> MaterialTheme.colorScheme.background
+                        },
+                )
+            }
         }
-        TicTacToeGrid(
-          modifier = Modifier.fillMaxWidth(),
-          board = selectedItem.board,
-          onclick = {},
-          winningMoves = winningMoves,
-          clickable = false,
-          color =
-            when {
-              winner.contains("AI") -> MaterialTheme.colorScheme.errorContainer
-              !winner.contains("AI") -> MaterialTheme.colorScheme.primaryContainer
-              else -> MaterialTheme.colorScheme.background
-            },
-        )
-      }
     }
-  }
 }

@@ -11,23 +11,32 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun TitleAndDescription(title: String, description: String? = null) {
-  Column {
-    Text(
-      text = title,
-      modifier = Modifier.padding(15.dp, 10.dp, 15.dp, if (description == null) 10.dp else 0.dp),
-      fontSize = 18.sp,
-      fontWeight = FontWeight.SemiBold,
-      textAlign = TextAlign.Left,
-    )
-    if (description != null) {
-      Text(
-        text = description,
-        modifier = Modifier.padding(15.dp, 0.dp, 15.dp, 10.dp),
-        fontSize = 12.sp,
-        fontWeight = FontWeight.Normal,
-        textAlign = TextAlign.Left,
-      )
+fun TitleAndDescription(
+    title: String,
+    description: String? = null,
+) {
+    Column {
+        Text(
+            text = title,
+            modifier =
+                Modifier.padding(
+                    15.dp,
+                    10.dp,
+                    15.dp,
+                    if (description == null) 10.dp else 0.dp,
+                ),
+            fontSize = 18.sp,
+            fontWeight = FontWeight.SemiBold,
+            textAlign = TextAlign.Left,
+        )
+        if (description != null) {
+            Text(
+                text = description,
+                modifier = Modifier.padding(15.dp, 0.dp, 15.dp, 10.dp),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Normal,
+                textAlign = TextAlign.Left,
+            )
+        }
     }
-  }
 }

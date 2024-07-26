@@ -33,9 +33,9 @@ import androidx.compose.ui.unit.sp
 import domain.model.AppSetting
 import domain.model.AppSettings
 import domain.repository.AppSettingRepository
-import getPlatform
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
+import platform.getPlatform
 import presentation.common.components.Header
 import presentation.common.components.TitleAndDescription
 import presentation.theme.UIColorTypes
@@ -43,140 +43,161 @@ import presentation.theme.UIColorTypes
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsBottomSheet(
-  modifier: Modifier = Modifier,
-  sheetState: SheetState,
-  onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
+    sheetState: SheetState,
+    onDismissRequest: () -> Unit,
 ) {
-  val coroutineScope = rememberCoroutineScope()
-  val appSettingRepository = koinInject<AppSettingRepository>()
-  val isAndroidPlatformWithDynamicColorSupport =
-    getPlatform().name == "Android" && getPlatform().version.toInt() >= 31
-  val themeOptions =
-    UIColorTypes.entries
-      .map { it.name }
-      .toMutableList()
-      .apply { if (isAndroidPlatformWithDynamicColorSupport) add(0, "Dynamic") }
+    val coroutineScope = rememberCoroutineScope()
+    val appSettingRepository = koinInject<AppSettingRepository>()
+    val isAndroidPlatformWithDynamicColorSupport =
+        getPlatform().name == "Android" && getPlatform().version.toInt() >= 31
+    val themeOptions =
+        UIColorTypes.entries
+            .map { it.name }
+            .toMutableList()
+            .apply { if (isAndroidPlatformWithDynamicColorSupport) add(0, "Dynamic") }
 
-  val oledOptions = listOf("On", "Off")
-  val currentOledOption =
-    appSettingRepository
-      .getAppSetting(AppSettings.OLED)
-      .collectAsState(AppSetting(AppSettings.OLED, "false"))
-      .value
-      ?.value ?: "false"
+    val oledOptions = listOf("On", "Off")
+    val currentOledOption =
+        appSettingRepository
+            .getAppSetting(AppSettings.OLED)
+            .collectAsState(AppSetting(AppSettings.OLED, "false"))
+            .value
+            ?.value ?: "false"
 
-  val currentUiColorTypeFromDb =
-    appSettingRepository
-      .getAppSetting(AppSettings.UI_COLOR_TYPE)
-      .collectAsState(AppSetting(AppSettings.UI_COLOR_TYPE, UIColorTypes.Default.name))
-      .value
-      ?.value
-  val currentUiColorType =
-    UIColorTypes.entries.find { it.name == currentUiColorTypeFromDb } ?: UIColorTypes.Default
-  val isDynamicColorAndroid =
-    (appSettingRepository
-        .getAppSetting(AppSettings.DYNAMIC_COLOR_ANDROID)
-        .collectAsState(AppSetting(AppSettings.DYNAMIC_COLOR_ANDROID, "true"))
-        .value
-        ?.value ?: "true")
-      .toBoolean() && isAndroidPlatformWithDynamicColorSupport
-  val currentThemeIndex =
-    if (isDynamicColorAndroid) 0 else themeOptions.indexOf(currentUiColorType.name)
+    val currentUiColorTypeFromDb =
+        appSettingRepository
+            .getAppSetting(AppSettings.UI_COLOR_TYPE)
+            .collectAsState(AppSetting(AppSettings.UI_COLOR_TYPE, UIColorTypes.Default.name))
+            .value
+            ?.value
+    val currentUiColorType =
+        UIColorTypes.entries.find { it.name == currentUiColorTypeFromDb } ?: UIColorTypes.Default
+    val isDynamicColorAndroid =
+        (
+            appSettingRepository
+                .getAppSetting(AppSettings.DYNAMIC_COLOR_ANDROID)
+                .collectAsState(AppSetting(AppSettings.DYNAMIC_COLOR_ANDROID, "true"))
+                .value
+                ?.value ?: "true"
+        ).toBoolean() &&
+            isAndroidPlatformWithDynamicColorSupport
+    val currentThemeIndex =
+        if (isDynamicColorAndroid) 0 else themeOptions.indexOf(currentUiColorType.name)
 
-  ModalBottomSheet(onDismissRequest = onDismissRequest, sheetState = sheetState) {
-    var expanded by remember { mutableStateOf(false) }
-    Column(
-      modifier = modifier.fillMaxWidth().padding(15.dp),
-      horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = Arrangement.Center,
-    ) {
-      Header(text = "Settings")
+    ModalBottomSheet(onDismissRequest = onDismissRequest, sheetState = sheetState) {
+        var expanded by remember { mutableStateOf(false) }
+        Column(
+            modifier = modifier.fillMaxWidth().padding(15.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            Header(text = "Settings")
 
-      Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-      ) {
-        TitleAndDescription("Theme", "Choose overall app theme.")
-
-        ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
-          TextField(
-            modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
-            value = UIColorTypes.entries[currentThemeIndex].name,
-            onValueChange = {},
-            readOnly = true,
-            singleLine = true,
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            colors = ExposedDropdownMenuDefaults.textFieldColors(),
-          )
-          ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-            themeOptions.forEachIndexed { index, themeOption ->
-              DropdownMenuItem(
-                text = { Text(themeOption) },
-                onClick = {
-                  if (index == 0 && isAndroidPlatformWithDynamicColorSupport) {
-                    coroutineScope.launch {
-                      appSettingRepository.upsertAppSetting(
-                        AppSetting(AppSettings.DYNAMIC_COLOR_ANDROID, "true")
-                      )
-                    }
-                  } else {
-                    val selectedTheme =
-                      if (isAndroidPlatformWithDynamicColorSupport) {
-                        UIColorTypes.entries[index - 1]
-                      } else {
-                        UIColorTypes.entries[index]
-                      }
-                    coroutineScope.launch {
-                      appSettingRepository.upsertAppSetting(
-                        AppSetting(AppSettings.UI_COLOR_TYPE, selectedTheme.name)
-                      )
-                      appSettingRepository.upsertAppSetting(
-                        AppSetting(AppSettings.DYNAMIC_COLOR_ANDROID, "false")
-                      )
-                    }
-                  }
-                },
-                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-              )
-            }
-          }
-        }
-      }
-
-      Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-      ) {
-        TitleAndDescription("OLED Mode", "Enable true black for dark mode.")
-
-        SingleChoiceSegmentedButtonRow {
-          oledOptions.forEachIndexed { index, oledOption ->
-            SegmentedButton(
-              shape = SegmentedButtonDefaults.itemShape(count = oledOptions.size, index = index),
-              onClick = {
-                coroutineScope.launch {
-                  appSettingRepository.upsertAppSetting(
-                    AppSetting(AppSettings.OLED, (!currentOledOption.toBoolean()).toString())
-                  )
-                }
-              },
-              selected = index == (if (currentOledOption.toBoolean()) 1 else 0),
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-              Text(text = oledOption, modifier = Modifier.padding(5.dp, 0.dp))
-            }
-          }
-        }
-      }
+                TitleAndDescription("Theme", "Choose overall app theme.")
 
-      Text(
-        text = "${getPlatform().name} ${getPlatform().version}",
-        modifier = Modifier.fillMaxWidth().padding(10.dp),
-        fontSize = 10.sp,
-        fontWeight = FontWeight.Normal,
-        textAlign = TextAlign.Center,
-      )
+                ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
+                    TextField(
+                        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
+                        value = UIColorTypes.entries[currentThemeIndex].name,
+                        onValueChange = {},
+                        readOnly = true,
+                        singleLine = true,
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                        colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                    )
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                    ) {
+                        themeOptions.forEachIndexed { index, themeOption ->
+                            DropdownMenuItem(
+                                text = { Text(themeOption) },
+                                onClick = {
+                                    if (index == 0 && isAndroidPlatformWithDynamicColorSupport) {
+                                        coroutineScope.launch {
+                                            appSettingRepository.upsertAppSetting(
+                                                AppSetting(
+                                                    AppSettings.DYNAMIC_COLOR_ANDROID,
+                                                    "true",
+                                                ),
+                                            )
+                                        }
+                                    } else {
+                                        val selectedTheme =
+                                            if (isAndroidPlatformWithDynamicColorSupport) {
+                                                UIColorTypes.entries[index - 1]
+                                            } else {
+                                                UIColorTypes.entries[index]
+                                            }
+                                        coroutineScope.launch {
+                                            appSettingRepository.upsertAppSetting(
+                                                AppSetting(
+                                                    AppSettings.UI_COLOR_TYPE,
+                                                    selectedTheme.name,
+                                                ),
+                                            )
+                                            appSettingRepository.upsertAppSetting(
+                                                AppSetting(
+                                                    AppSettings.DYNAMIC_COLOR_ANDROID,
+                                                    "false",
+                                                ),
+                                            )
+                                        }
+                                    }
+                                },
+                                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                            )
+                        }
+                    }
+                }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                TitleAndDescription("OLED Mode", "Enable true black for dark mode.")
+
+                SingleChoiceSegmentedButtonRow {
+                    oledOptions.forEachIndexed { index, oledOption ->
+                        SegmentedButton(
+                            shape =
+                                SegmentedButtonDefaults.itemShape(
+                                    count = oledOptions.size,
+                                    index = index,
+                                ),
+                            onClick = {
+                                coroutineScope.launch {
+                                    appSettingRepository.upsertAppSetting(
+                                        AppSetting(
+                                            AppSettings.OLED,
+                                            (!currentOledOption.toBoolean()).toString(),
+                                        ),
+                                    )
+                                }
+                            },
+                            selected = index == (if (currentOledOption.toBoolean()) 1 else 0),
+                        ) {
+                            Text(text = oledOption, modifier = Modifier.padding(5.dp, 0.dp))
+                        }
+                    }
+                }
+            }
+
+            Text(
+                text = "${getPlatform().name} ${getPlatform().version}",
+                modifier = Modifier.fillMaxWidth().padding(10.dp),
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Normal,
+                textAlign = TextAlign.Center,
+            )
+        }
     }
-  }
 }

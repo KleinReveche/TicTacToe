@@ -48,89 +48,90 @@ import resources.day_night_switch_sun
 /** Credits to jurajkusnier @ https://github.com/jurajkusnier/drak-mode-switch * */
 @Composable
 fun DarkModeSwitch(
-  checked: Boolean,
-  modifier: Modifier = Modifier,
-  onCheckedChanged: (Boolean) -> Unit,
-  switchWidth: Dp = 160.dp,
-  switchHeight: Dp = 64.dp,
-  handleSize: Dp = 52.dp,
-  handlePadding: Dp = 10.dp,
+    modifier: Modifier = Modifier,
+    checked: Boolean,
+    onCheckedChanged: (Boolean) -> Unit,
+    switchWidth: Dp = 160.dp,
+    switchHeight: Dp = 64.dp,
+    handleSize: Dp = 52.dp,
+    handlePadding: Dp = 10.dp,
 ) {
-  val valueToOffset = if (checked) 1f else 0f
-  val offset = remember { Animatable(valueToOffset) }
-  val scope = rememberCoroutineScope()
+    val valueToOffset = if (checked) 1f else 0f
+    val offset = remember { Animatable(valueToOffset) }
+    val scope = rememberCoroutineScope()
 
-  DisposableEffect(checked) {
-    if (offset.targetValue != valueToOffset) {
-      scope.launch { offset.animateTo(valueToOffset, animationSpec = tween(1000)) }
-    }
-    onDispose {}
-  }
-
-  Box(
-    contentAlignment = Alignment.CenterStart,
-    modifier =
-      modifier
-        .width(switchWidth)
-        .height(switchHeight)
-        .clip(RoundedCornerShape(switchHeight))
-        .background(lerp(BlueSky, NightSky, offset.value))
-        .border(3.dp, BorderColor, RoundedCornerShape(switchHeight))
-        .toggleable(
-          value = checked,
-          onValueChange = onCheckedChanged,
-          role = Role.Switch,
-          interactionSource = remember { MutableInteractionSource() },
-          indication = null,
-        ),
-  ) {
-    val backgroundPainter = painterResource(Res.drawable.day_night_switch_background)
-    Canvas(modifier = Modifier.fillMaxSize()) {
-      with(backgroundPainter) {
-        val scale = size.width / intrinsicSize.width
-        val scaledHeight = intrinsicSize.height * scale
-        translate(top = (size.height - scaledHeight) * (1f - offset.value)) {
-          draw(Size(size.width, scaledHeight))
+    DisposableEffect(checked) {
+        if (offset.targetValue != valueToOffset) {
+            scope.launch { offset.animateTo(valueToOffset, animationSpec = tween(1000)) }
         }
-      }
+        onDispose {}
     }
-
-    Image(
-      painter = painterResource(Res.drawable.day_night_switch_glow),
-      contentDescription = null,
-      contentScale = ContentScale.Crop,
-      modifier =
-        Modifier.size(switchWidth).graphicsLayer {
-          scaleX = 1.2f
-          scaleY = scaleX
-          translationX =
-            lerp(
-              -size.width * 0.5f + handlePadding.toPx() + handleSize.toPx() * 0.5f,
-              switchWidth.toPx() -
-                size.width * 0.5f -
-                handlePadding.toPx() -
-                handleSize.toPx() * 0.5f,
-              offset.value,
-            )
-        },
-    )
 
     Box(
-      modifier =
-        Modifier.padding(horizontal = handlePadding)
-          .size(handleSize)
-          .offset(x = (switchWidth - handleSize - handlePadding * 2f) * offset.value)
-          .paint(painterResource(Res.drawable.day_night_switch_sun))
-          .clip(CircleShape)
-    ) {
-      Image(
-        painter = painterResource(Res.drawable.day_night_switch_moon),
-        contentDescription = null,
+        contentAlignment = Alignment.CenterStart,
         modifier =
-          Modifier.size(handleSize).graphicsLayer {
-            translationX = size.width * (1f - offset.value)
-          },
-      )
+            modifier
+                .width(switchWidth)
+                .height(switchHeight)
+                .clip(RoundedCornerShape(switchHeight))
+                .background(lerp(BlueSky, NightSky, offset.value))
+                .border(3.dp, BorderColor, RoundedCornerShape(switchHeight))
+                .toggleable(
+                    value = checked,
+                    onValueChange = onCheckedChanged,
+                    role = Role.Switch,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                ),
+    ) {
+        val backgroundPainter = painterResource(Res.drawable.day_night_switch_background)
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            with(backgroundPainter) {
+                val scale = size.width / intrinsicSize.width
+                val scaledHeight = intrinsicSize.height * scale
+                translate(top = (size.height - scaledHeight) * (1f - offset.value)) {
+                    draw(Size(size.width, scaledHeight))
+                }
+            }
+        }
+
+        Image(
+            painter = painterResource(Res.drawable.day_night_switch_glow),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier =
+                Modifier.size(switchWidth).graphicsLayer {
+                    scaleX = 1.2f
+                    scaleY = scaleX
+                    translationX =
+                        lerp(
+                            -size.width * 0.5f + handlePadding.toPx() + handleSize.toPx() * 0.5f,
+                            switchWidth.toPx() -
+                                size.width * 0.5f -
+                                handlePadding.toPx() -
+                                handleSize.toPx() * 0.5f,
+                            offset.value,
+                        )
+                },
+        )
+
+        Box(
+            modifier =
+                Modifier
+                    .padding(horizontal = handlePadding)
+                    .size(handleSize)
+                    .offset(x = (switchWidth - handleSize - handlePadding * 2f) * offset.value)
+                    .paint(painterResource(Res.drawable.day_night_switch_sun))
+                    .clip(CircleShape),
+        ) {
+            Image(
+                painter = painterResource(Res.drawable.day_night_switch_moon),
+                contentDescription = null,
+                modifier =
+                    Modifier.size(handleSize).graphicsLayer {
+                        translationX = size.width * (1f - offset.value)
+                    },
+            )
+        }
     }
-  }
 }

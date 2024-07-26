@@ -11,12 +11,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun Header(modifier: Modifier = Modifier, text: String) {
-  Text(
-    text = text,
-    modifier = modifier.fillMaxWidth().padding(10.dp),
-    fontSize = 24.sp,
-    fontWeight = FontWeight.Bold,
-    textAlign = TextAlign.Center,
-  )
+fun Header(
+    modifier: Modifier = Modifier,
+    text: String,
+) {
+    Text(
+        text = text,
+        modifier = modifier.fillMaxWidth().padding(10.dp),
+        fontSize = 24.sp,
+        fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Center,
+    )
 }

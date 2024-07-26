@@ -32,7 +32,7 @@ val NightSky = Color(0xFF333333)
 val BorderColor = Color(0x40000000)
 
 enum class UIColorTypes {
-  Default,
-  Yellow,
-  Green,
+    Default,
+    Yellow,
+    Green,
 }

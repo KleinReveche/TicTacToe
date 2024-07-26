@@ -29,64 +29,72 @@ import resources.local_vs_player
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocalVsPlayerDetails(
-  modifier: Modifier = Modifier,
-  sheetState: SheetState,
-  onDismissRequest: () -> Unit,
-  navController: NavHostController,
-  scope: CoroutineScope,
-  snackbarHostState: SnackbarHostState,
-  vm: ScreenMainViewModel,
+    modifier: Modifier = Modifier,
+    sheetState: SheetState,
+    onDismissRequest: () -> Unit,
+    onClick: () -> Unit,
+    navController: NavHostController,
+    scope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
+    vm: ScreenMainViewModel,
 ) {
-  ModalBottomSheet(onDismissRequest = onDismissRequest, sheetState = sheetState) {
-    Column(
-      modifier = modifier.padding(0.dp, 10.dp),
-      horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = Arrangement.Center,
-    ) {
-      Header(text = stringResource(Res.string.local_vs_player))
+    ModalBottomSheet(onDismissRequest = onDismissRequest, sheetState = sheetState) {
+        Column(
+            modifier = modifier.padding(0.dp, 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            Header(text = stringResource(Res.string.local_vs_player))
 
-      OutlinedTextField(
-        modifier = modifier,
-        value = vm.player1,
-        onValueChange = { vm.player1 = it },
-        label = { Text("X Player Name") },
-        singleLine = true,
-      )
+            OutlinedTextField(
+                modifier = modifier,
+                value = vm.player1,
+                onValueChange = { vm.player1 = it },
+                label = { Text("X Player Name") },
+                singleLine = true,
+            )
 
-      OutlinedTextField(
-        modifier = modifier,
-        value = vm.player2,
-        onValueChange = { vm.player2 = it },
-        label = { Text("O Player Name") },
-        singleLine = true,
-      )
+            OutlinedTextField(
+                modifier = modifier,
+                value = vm.player2,
+                onValueChange = { vm.player2 = it },
+                label = { Text("O Player Name") },
+                singleLine = true,
+            )
 
-      Button(
-        modifier = modifier,
-        onClick = {
-          if (vm.player1 == "" || vm.player2 == "") {
-            scope.launch { snackbarHostState.showSnackbar("Please enter a player name.") }
-            return@Button
-          }
+            Button(
+                modifier = modifier,
+                onClick = {
+                    if (vm.player1 == "" || vm.player2 == "") {
+                        scope.launch { snackbarHostState.showSnackbar("Please enter a player name.") }
+                        return@Button
+                    }
 
-          if (vm.player1 == vm.player2) {
-            scope.launch { snackbarHostState.showSnackbar("Player names must be different.") }
-            return@Button
-          }
+                    if (vm.player1 == vm.player2) {
+                        scope.launch { snackbarHostState.showSnackbar("Player names must be different.") }
+                        return@Button
+                    }
 
-          vm.player1 = vm.player1.trim()
-          vm.player2 = vm.player2.trim()
+                    onClick()
 
-          vm.upsertSetting(scope, AppSetting(AppSettings.LAST_PLAYER_1, vm.player1))
-          vm.upsertSetting(scope, AppSetting(AppSettings.LAST_PLAYER_2, vm.player2))
-          vm.upsertPlayer(scope, vm.player1)
-          vm.upsertPlayer(scope, vm.player2)
+                    vm.player1 = vm.player1.trim()
+                    vm.player2 = vm.player2.trim()
 
-          navController.navigate(ScreenLocalVsPlayer(player1 = vm.player1, player2 = vm.player2))
-        },
-      ) {
-        Text("Play")
-      }
+                    vm.upsertSetting(scope, AppSetting(AppSettings.LAST_PLAYER_1, vm.player1))
+                    vm.upsertSetting(scope, AppSetting(AppSettings.LAST_PLAYER_2, vm.player2))
+                    vm.upsertPlayer(scope, vm.player1)
+                    vm.upsertPlayer(scope, vm.player2)
+
+                    navController.navigate(
+                        ScreenLocalVsPlayer(
+                            player1 = vm.player1,
+                            player2 = vm.player2,
+                        ),
+                    )
+                },
+            ) {
+                Text("Play")
+            }
+        }
     }
-  }
 }

@@ -21,124 +21,124 @@ import domain.model.LocalPlayer
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocalPlayerDetailsBottomSheet(
-  modifier: Modifier = Modifier,
-  onDismissRequest: () -> Unit,
-  sheetState: SheetState,
-  localPlayer: LocalPlayer,
-  isVsComputer: Boolean = false,
+    modifier: Modifier = Modifier,
+    onDismissRequest: () -> Unit,
+    sheetState: SheetState,
+    localPlayer: LocalPlayer,
+    isVsComputer: Boolean = false,
 ) {
-  ModalBottomSheet(
-    modifier = modifier,
-    onDismissRequest = onDismissRequest,
-    sheetState = sheetState,
-  ) {
-    Column(
-      modifier = modifier.fillMaxWidth().padding(20.dp),
-      horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = Arrangement.Center,
+    ModalBottomSheet(
+        modifier = modifier,
+        onDismissRequest = onDismissRequest,
+        sheetState = sheetState,
     ) {
-      val padding = 30.dp
-      val totalVsComputerWin =
-        localPlayer.playerVsComputerEasyWin +
-          localPlayer.playerVsComputerNormalWin +
-          localPlayer.playerVsComputerInsaneWin
-      val totalVsComputerLoss =
-        localPlayer.playerVsComputerEasyLoss +
-          localPlayer.playerVsComputerNormalLoss +
-          localPlayer.playerVsComputerInsaneLoss
-      val totalVsComputerDraw =
-        localPlayer.playerVsComputerEasyDraw +
-          localPlayer.playerVsComputerNormalDraw +
-          localPlayer.playerVsComputerInsaneDraw
-
-      Header(text = localPlayer.name)
-
-      Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-      ) {
         Column(
-          Modifier.weight(0.3f),
-          horizontalAlignment = Alignment.CenterHorizontally,
-          verticalArrangement = Arrangement.Center,
+            modifier = modifier.fillMaxWidth().padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
         ) {
-          Text(
-            text = if (isVsComputer) "Wins vs AI" else "Wins vs Player",
-            textAlign = TextAlign.Center,
-            fontSize = 16.sp,
-          )
-          Text(
-            text = if (isVsComputer) "$totalVsComputerWin" else "${localPlayer.playerVsPlayerWin}",
-            fontSize = 32.sp,
-          )
-        }
+            val padding = 30.dp
+            val totalVsComputerWin =
+                localPlayer.playerVsComputerEasyWin +
+                    localPlayer.playerVsComputerNormalWin +
+                    localPlayer.playerVsComputerInsaneWin
+            val totalVsComputerLoss =
+                localPlayer.playerVsComputerEasyLoss +
+                    localPlayer.playerVsComputerNormalLoss +
+                    localPlayer.playerVsComputerInsaneLoss
+            val totalVsComputerDraw =
+                localPlayer.playerVsComputerEasyDraw +
+                    localPlayer.playerVsComputerNormalDraw +
+                    localPlayer.playerVsComputerInsaneDraw
 
-        Column(
-          Modifier.weight(0.3f),
-          horizontalAlignment = Alignment.CenterHorizontally,
-          verticalArrangement = Arrangement.Center,
-        ) {
-          Text(
-            text = if (isVsComputer) "Draws vs AI" else "Draws vs Player",
-            textAlign = TextAlign.Center,
-            fontSize = 16.sp,
-          )
-          Text(
-            text =
-              if (isVsComputer) "$totalVsComputerDraw" else "${localPlayer.playerVsPlayerDraw}",
-            fontSize = 32.sp,
-          )
-        }
+            Header(text = localPlayer.name)
 
-        Column(
-          Modifier.weight(0.3f),
-          horizontalAlignment = Alignment.CenterHorizontally,
-          verticalArrangement = Arrangement.Center,
-        ) {
-          Text(
-            text = if (isVsComputer) "Losses vs AI" else "Losses vs Player",
-            textAlign = TextAlign.Center,
-            fontSize = 16.sp,
-          )
-          Text(
-            text =
-              if (isVsComputer) "$totalVsComputerLoss" else "${localPlayer.playerVsPlayerLoss}",
-            fontSize = 32.sp,
-          )
-        }
-      }
+            Row(
+                modifier = modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(
+                    Modifier.weight(0.3f),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Text(
+                        text = if (isVsComputer) "Wins vs AI" else "Wins vs Player",
+                        textAlign = TextAlign.Center,
+                        fontSize = 16.sp,
+                    )
+                    Text(
+                        text = if (isVsComputer) "$totalVsComputerWin" else "${localPlayer.playerVsPlayerWin}",
+                        fontSize = 32.sp,
+                    )
+                }
 
-      HorizontalDivider(modifier.padding(5.dp))
-      Text(
-        text = "Wins:",
-        modifier = modifier.fillMaxWidth().padding(padding, 0.dp),
-        textAlign = TextAlign.Start,
-      )
-      Text(text = "Against other Players - ${localPlayer.playerVsPlayerWin}")
-      Text(text = "Against Easy AI - ${localPlayer.playerVsComputerEasyWin}")
-      Text(text = "Against Normal AI - ${localPlayer.playerVsComputerNormalWin}")
-      Text(text = "Against Insane AI - ${localPlayer.playerVsComputerInsaneWin}")
-      HorizontalDivider(modifier.padding(5.dp))
-      Text(
-        text = "Losses:",
-        modifier = modifier.fillMaxWidth().padding(padding, 0.dp),
-        textAlign = TextAlign.Start,
-      )
-      Text(text = "Against other Players - ${localPlayer.playerVsPlayerLoss}")
-      Text(text = "Against Easy AI - ${localPlayer.playerVsComputerEasyLoss}")
-      Text(text = "Against Normal AI - ${localPlayer.playerVsComputerNormalLoss}")
-      Text(text = "Against Insane AI - ${localPlayer.playerVsComputerInsaneLoss}")
-      HorizontalDivider(modifier.padding(5.dp))
-      Text(
-        text = "Draws:",
-        modifier = modifier.fillMaxWidth().padding(padding, 0.dp),
-        textAlign = TextAlign.Start,
-      )
-      Text(text = "Against other Players - ${localPlayer.playerVsPlayerDraw}")
-      Text(text = "Against Easy AI - ${localPlayer.playerVsComputerEasyDraw}")
-      Text(text = "Against Normal AI - ${localPlayer.playerVsComputerNormalDraw}")
-      Text(text = "Against Insane AI - ${localPlayer.playerVsComputerInsaneDraw}")
+                Column(
+                    Modifier.weight(0.3f),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Text(
+                        text = if (isVsComputer) "Draws vs AI" else "Draws vs Player",
+                        textAlign = TextAlign.Center,
+                        fontSize = 16.sp,
+                    )
+                    Text(
+                        text =
+                            if (isVsComputer) "$totalVsComputerDraw" else "${localPlayer.playerVsPlayerDraw}",
+                        fontSize = 32.sp,
+                    )
+                }
+
+                Column(
+                    Modifier.weight(0.3f),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Text(
+                        text = if (isVsComputer) "Losses vs AI" else "Losses vs Player",
+                        textAlign = TextAlign.Center,
+                        fontSize = 16.sp,
+                    )
+                    Text(
+                        text =
+                            if (isVsComputer) "$totalVsComputerLoss" else "${localPlayer.playerVsPlayerLoss}",
+                        fontSize = 32.sp,
+                    )
+                }
+            }
+
+            HorizontalDivider(modifier.padding(5.dp))
+            Text(
+                text = "Wins:",
+                modifier = modifier.fillMaxWidth().padding(padding, 0.dp),
+                textAlign = TextAlign.Start,
+            )
+            Text(text = "Against other Players - ${localPlayer.playerVsPlayerWin}")
+            Text(text = "Against Easy AI - ${localPlayer.playerVsComputerEasyWin}")
+            Text(text = "Against Normal AI - ${localPlayer.playerVsComputerNormalWin}")
+            Text(text = "Against Insane AI - ${localPlayer.playerVsComputerInsaneWin}")
+            HorizontalDivider(modifier.padding(5.dp))
+            Text(
+                text = "Losses:",
+                modifier = modifier.fillMaxWidth().padding(padding, 0.dp),
+                textAlign = TextAlign.Start,
+            )
+            Text(text = "Against other Players - ${localPlayer.playerVsPlayerLoss}")
+            Text(text = "Against Easy AI - ${localPlayer.playerVsComputerEasyLoss}")
+            Text(text = "Against Normal AI - ${localPlayer.playerVsComputerNormalLoss}")
+            Text(text = "Against Insane AI - ${localPlayer.playerVsComputerInsaneLoss}")
+            HorizontalDivider(modifier.padding(5.dp))
+            Text(
+                text = "Draws:",
+                modifier = modifier.fillMaxWidth().padding(padding, 0.dp),
+                textAlign = TextAlign.Start,
+            )
+            Text(text = "Against other Players - ${localPlayer.playerVsPlayerDraw}")
+            Text(text = "Against Easy AI - ${localPlayer.playerVsComputerEasyDraw}")
+            Text(text = "Against Normal AI - ${localPlayer.playerVsComputerNormalDraw}")
+            Text(text = "Against Insane AI - ${localPlayer.playerVsComputerInsaneDraw}")
+        }
     }
-  }
 }

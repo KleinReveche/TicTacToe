@@ -35,71 +35,69 @@ import resources.ic_x
 
 @Composable
 fun TicTacToeButton(
-  text: Char?,
-  onclick: () -> Unit,
-  windowSize: WindowSizeClass,
-  isWinningMove: Boolean = false,
-  clickable: Boolean = true,
-  color: Color = MaterialTheme.colorScheme.background,
+    text: Char?,
+    onclick: () -> Unit,
+    windowSize: WindowSizeClass,
+    isWinningMove: Boolean = false,
+    clickable: Boolean = true,
+    color: Color = MaterialTheme.colorScheme.background,
 ) {
-  Box(
-    Modifier.size(
-        when (windowSize.heightSizeClass) {
-          WindowHeightSizeClass.Compact -> 125.dp
-          WindowHeightSizeClass.Medium -> 150.dp
-          else -> 175.dp
-        }
-      )
-      .padding(8.dp)
-      .clip(CircleShape)
-      .aspectRatio(1f)
-      .border(
-        width = 1.dp,
-        color = MaterialTheme.colorScheme.onBackground.copy(),
-        shape = CircleShape,
-      )
-      .background(
-        color =
-          animateColorAsState(
-              targetValue = if (isWinningMove) color else MaterialTheme.colorScheme.background,
-              label = "Button Color",
+    Box(
+        Modifier
+            .size(
+                when (windowSize.heightSizeClass) {
+                    WindowHeightSizeClass.Compact -> 125.dp
+                    WindowHeightSizeClass.Medium -> 150.dp
+                    else -> 175.dp
+                },
+            ).padding(8.dp)
+            .clip(CircleShape)
+            .aspectRatio(1f)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.onBackground.copy(),
+                shape = CircleShape,
+            ).background(
+                color =
+                    animateColorAsState(
+                        targetValue = if (isWinningMove) color else MaterialTheme.colorScheme.background,
+                        label = "Button Color",
+                    ).value,
+                shape = CircleShape,
+            ).clickable(
+                indication = if (text == null) LocalIndication.current else null,
+                interactionSource = remember { MutableInteractionSource() },
+                enabled = text == null && clickable,
+            ) {
+                if (text == null) onclick()
+            },
+        contentAlignment = Alignment.Center,
+    ) {
+        AnimatedContent(targetState = text, label = "") { targetCurrentPiece ->
+            Image(
+                modifier = Modifier.padding(8.dp).fillMaxSize(),
+                painter =
+                    painterResource(
+                        when (targetCurrentPiece) {
+                            PLAYER_X -> Res.drawable.ic_x
+                            PLAYER_O -> Res.drawable.ic_o
+                            else -> Res.drawable.ic_blank
+                        },
+                    ),
+                contentDescription = targetCurrentPiece.toString(),
+                colorFilter =
+                    ColorFilter.tint(
+                        animateColorAsState(
+                            targetValue =
+                                if (color == MaterialTheme.colorScheme.primary) {
+                                    MaterialTheme.colorScheme.background
+                                } else {
+                                    MaterialTheme.colorScheme.primary
+                                },
+                            label = "Button Color",
+                        ).value,
+                    ),
             )
-            .value,
-        shape = CircleShape,
-      )
-      .clickable(
-        indication = if (text == null) LocalIndication.current else null,
-        interactionSource = remember { MutableInteractionSource() },
-        enabled = text == null && clickable,
-      ) {
-        if (text == null) onclick()
-      },
-    contentAlignment = Alignment.Center,
-  ) {
-    AnimatedContent(targetState = text, label = "") { targetCurrentPiece ->
-      Image(
-        modifier = Modifier.padding(8.dp).fillMaxSize(),
-        painter =
-          painterResource(
-            when (targetCurrentPiece) {
-              PLAYER_X -> Res.drawable.ic_x
-              PLAYER_O -> Res.drawable.ic_o
-              else -> Res.drawable.ic_blank
-            }
-          ),
-        contentDescription = targetCurrentPiece.toString(),
-        colorFilter =
-          ColorFilter.tint(
-            animateColorAsState(
-                targetValue =
-                  if (color == MaterialTheme.colorScheme.primary)
-                    MaterialTheme.colorScheme.background
-                  else MaterialTheme.colorScheme.primary,
-                label = "Button Color",
-              )
-              .value
-          ),
-      )
+        }
     }
-  }
 }

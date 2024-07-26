@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SimpleTopAppBar(text: String) {
-  CenterAlignedTopAppBar(
-    title = { Text(text) },
-    modifier = Modifier.background(MaterialTheme.colorScheme.surfaceTint),
-  )
+    CenterAlignedTopAppBar(
+        title = { Text(text) },
+        modifier = Modifier.background(MaterialTheme.colorScheme.surfaceTint),
+    )
 }

@@ -8,10 +8,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
 class MainActivity : ComponentActivity() {
-  override fun onCreate(savedInstanceState: Bundle?) {
-    installSplashScreen()
-    enableEdgeToEdge()
-    super.onCreate(savedInstanceState)
-    setContent { TicTacToeApp() }
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
+        enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
+        setContent { TicTacToeApp() }
+    }
 }

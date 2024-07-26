@@ -40,95 +40,105 @@ import resources.normal
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocalVsComputerDetails(
-  modifier: Modifier = Modifier,
-  sheetState: SheetState,
-  onDismissRequest: () -> Unit,
-  navController: NavHostController,
-  scope: CoroutineScope,
-  snackbarHostState: SnackbarHostState,
-  vm: ScreenMainViewModel,
+    modifier: Modifier = Modifier,
+    sheetState: SheetState,
+    onDismissRequest: () -> Unit,
+    onClick: () -> Unit,
+    navController: NavHostController,
+    scope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
+    vm: ScreenMainViewModel,
 ) {
-  ModalBottomSheet(onDismissRequest = onDismissRequest, sheetState = sheetState) {
-    val computerDifficultyTypes =
-      arrayOf(
-        stringResource(Res.string.easy),
-        stringResource(Res.string.normal),
-        stringResource(Res.string.insane),
-      )
+    ModalBottomSheet(onDismissRequest = onDismissRequest, sheetState = sheetState) {
+        val computerDifficultyTypes =
+            arrayOf(
+                stringResource(Res.string.easy),
+                stringResource(Res.string.normal),
+                stringResource(Res.string.insane),
+            )
 
-    Column(
-      modifier = modifier.padding(0.dp, 10.dp),
-      horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = Arrangement.Center,
-    ) {
-      Header(text = stringResource(Res.string.local_vs_computer))
+        Column(
+            modifier = modifier.padding(0.dp, 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            Header(text = stringResource(Res.string.local_vs_computer))
 
-      Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-      ) {
-        OutlinedTextField(
-          modifier = modifier.weight(0.65f),
-          value = vm.player1,
-          onValueChange = { vm.player1 = it },
-          label = { Text("Player Name") },
-          singleLine = true,
-        )
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                OutlinedTextField(
+                    modifier = modifier.weight(0.65f),
+                    value = vm.player1,
+                    onValueChange = { vm.player1 = it },
+                    label = { Text("Player Name") },
+                    singleLine = true,
+                )
 
-        Button(
-          modifier = modifier.weight(0.35f),
-          onClick = {
-            if (vm.player1 == "") {
-              scope.launch { snackbarHostState.showSnackbar("Please enter a player name.") }
-              return@Button
+                Button(
+                    modifier = modifier.weight(0.35f),
+                    onClick = {
+                        if (vm.player1 == "") {
+                            scope.launch { snackbarHostState.showSnackbar("Please enter a player name.") }
+                            return@Button
+                        }
+
+                        onClick()
+
+                        vm.upsertSetting(
+                            scope,
+                            AppSetting(AppSettings.LAST_PLAYER_VS_COMPUTER, vm.player1),
+                        )
+
+                        navController.navigate(
+                            ScreenLocalVsComputer(
+                                vm.player1,
+                                vm.playerTypes[vm.singleplayerType].toString(),
+                                ComputerDifficulty.entries[vm.computerDifficulty].ordinal.toString(),
+                            ),
+                        )
+                    },
+                ) {
+                    Text("Play")
+                }
             }
 
-            vm.upsertSetting(scope, AppSetting(AppSettings.LAST_PLAYER_VS_COMPUTER, vm.player1))
+            TitleAndDescription(stringResource(Res.string.choose_symbol))
 
-            navController.navigate(
-              ScreenLocalVsComputer(
-                vm.player1,
-                vm.playerTypes[vm.singleplayerType].toString(),
-                ComputerDifficulty.entries[vm.computerDifficulty].ordinal.toString(),
-              )
-            )
-          },
-        ) {
-          Text("Play")
+            SingleChoiceSegmentedButtonRow {
+                vm.playerTypes.forEachIndexed { index, label ->
+                    SegmentedButton(
+                        shape =
+                            SegmentedButtonDefaults.itemShape(
+                                count = vm.playerTypes.size,
+                                index = index,
+                            ),
+                        onClick = { vm.singleplayerType = index },
+                        selected = index == vm.singleplayerType,
+                    ) {
+                        Text(label.toString())
+                    }
+                }
+            }
+
+            TitleAndDescription(stringResource(Res.string.choose_difficulty))
+
+            SingleChoiceSegmentedButtonRow {
+                computerDifficultyTypes.forEachIndexed { index, label ->
+                    SegmentedButton(
+                        shape =
+                            SegmentedButtonDefaults.itemShape(
+                                count = computerDifficultyTypes.size,
+                                index = index,
+                            ),
+                        onClick = { vm.computerDifficulty = index },
+                        selected = index == vm.computerDifficulty,
+                    ) {
+                        Text(label)
+                    }
+                }
+            }
         }
-      }
-
-      TitleAndDescription(stringResource(Res.string.choose_symbol))
-
-      SingleChoiceSegmentedButtonRow {
-        vm.playerTypes.forEachIndexed { index, label ->
-          SegmentedButton(
-            shape = SegmentedButtonDefaults.itemShape(count = vm.playerTypes.size, index = index),
-            onClick = { vm.singleplayerType = index },
-            selected = index == vm.singleplayerType,
-          ) {
-            Text(label.toString())
-          }
-        }
-      }
-
-      TitleAndDescription(stringResource(Res.string.choose_difficulty))
-
-      SingleChoiceSegmentedButtonRow {
-        computerDifficultyTypes.forEachIndexed { index, label ->
-          SegmentedButton(
-            shape =
-              SegmentedButtonDefaults.itemShape(
-                count = computerDifficultyTypes.size,
-                index = index,
-              ),
-            onClick = { vm.computerDifficulty = index },
-            selected = index == vm.computerDifficulty,
-          ) {
-            Text(label)
-          }
-        }
-      }
     }
-  }
 }

@@ -17,17 +17,27 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BackHistoryTopAppBar(text: String, navController: NavController, onClick: () -> Unit) {
-  CenterAlignedTopAppBar(
-    title = { Text(text = text, textAlign = TextAlign.Center) },
-    modifier = Modifier.background(MaterialTheme.colorScheme.surfaceTint),
-    navigationIcon = {
-      IconButton(onClick = { navController.popBackStack() }) {
-        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-      }
-    },
-    actions = {
-      IconButton(onClick = onClick) { Icon(Icons.Filled.History, contentDescription = "History") }
-    },
-  )
+fun BackHistoryTopAppBar(
+    modifier: Modifier = Modifier,
+    text: String,
+    navController: NavController,
+    onClick: () -> Unit,
+) {
+    CenterAlignedTopAppBar(
+        title = { Text(text = text, textAlign = TextAlign.Center) },
+        modifier = modifier.background(MaterialTheme.colorScheme.surfaceTint),
+        navigationIcon = {
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+            }
+        },
+        actions = {
+            IconButton(onClick = onClick) {
+                Icon(
+                    Icons.Filled.History,
+                    contentDescription = "History",
+                )
+            }
+        },
+    )
 }

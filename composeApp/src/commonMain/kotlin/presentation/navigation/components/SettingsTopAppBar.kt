@@ -35,55 +35,63 @@ import resources.settings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsTopAppBar(text: String, onClick: () -> Unit) {
-  val coroutineScope = rememberCoroutineScope()
-  var rotationAngle by remember { mutableFloatStateOf(0f) }
-  val appSettingRepository = koinInject<AppSettingRepository>()
-  val isDarkMode =
-    appSettingRepository
-      .getAppSetting(AppSettings.DARK_MODE)
-      .collectAsState(AppSetting(AppSettings.DARK_MODE, "true"))
-      .value
-      ?.value ?: isSystemInDarkTheme().toString()
-  val animatedRotationAngle: Float by
-    animateFloatAsState(
-      targetValue = rotationAngle,
-      animationSpec = tween(durationMillis = 300),
-      label = "Settings cog rotation",
-    )
-  CenterAlignedTopAppBar(
-    title = { Text(text, color = MaterialTheme.colorScheme.primary) },
-    modifier = Modifier.background(MaterialTheme.colorScheme.surfaceTint),
-    navigationIcon = {
-      DarkModeSwitch(
-        modifier = Modifier.padding(5.dp),
-        checked = isDarkMode.toBoolean(),
-        onCheckedChanged = {
-          coroutineScope.launch {
-            appSettingRepository.upsertAppSetting(AppSetting(AppSettings.DARK_MODE, it.toString()))
-          }
-        },
-        switchWidth = 80.dp,
-        switchHeight = 32.dp,
-        handleSize = 26.dp,
-        handlePadding = 5.dp,
-      )
-    },
-    actions = {
-      IconButton(
-        onClick = {
-          rotationAngle += 45f
-          onClick()
-        },
-        modifier = Modifier.rotate(animatedRotationAngle).padding(8.dp),
-      ) {
-        Icon(
-          imageVector = Icons.Rounded.Settings,
-          contentDescription = stringResource(Res.string.settings),
-          modifier = Modifier,
-          tint = MaterialTheme.colorScheme.primary,
+fun SettingsTopAppBar(
+    text: String,
+    onClick: () -> Unit,
+) {
+    val coroutineScope = rememberCoroutineScope()
+    var rotationAngle by remember { mutableFloatStateOf(0f) }
+    val appSettingRepository = koinInject<AppSettingRepository>()
+    val isDarkMode =
+        appSettingRepository
+            .getAppSetting(AppSettings.DARK_MODE)
+            .collectAsState(AppSetting(AppSettings.DARK_MODE, "true"))
+            .value
+            ?.value ?: isSystemInDarkTheme().toString()
+    val animatedRotationAngle: Float by
+        animateFloatAsState(
+            targetValue = rotationAngle,
+            animationSpec = tween(durationMillis = 300),
+            label = "Settings cog rotation",
         )
-      }
-    },
-  )
+    CenterAlignedTopAppBar(
+        title = { Text(text, color = MaterialTheme.colorScheme.primary) },
+        modifier = Modifier.background(MaterialTheme.colorScheme.surfaceTint),
+        navigationIcon = {
+            DarkModeSwitch(
+                modifier = Modifier.padding(5.dp),
+                checked = isDarkMode.toBoolean(),
+                onCheckedChanged = {
+                    coroutineScope.launch {
+                        appSettingRepository.upsertAppSetting(
+                            AppSetting(
+                                AppSettings.DARK_MODE,
+                                it.toString(),
+                            ),
+                        )
+                    }
+                },
+                switchWidth = 80.dp,
+                switchHeight = 32.dp,
+                handleSize = 26.dp,
+                handlePadding = 5.dp,
+            )
+        },
+        actions = {
+            IconButton(
+                onClick = {
+                    rotationAngle += 45f
+                    onClick()
+                },
+                modifier = Modifier.rotate(animatedRotationAngle).padding(8.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Settings,
+                    contentDescription = stringResource(Res.string.settings),
+                    modifier = Modifier,
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+            }
+        },
+    )
 }

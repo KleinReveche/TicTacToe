@@ -15,8 +15,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -27,10 +30,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
+import platform.getPlatform
 import presentation.navigation.components.LocalVsComputerDetails
 import presentation.navigation.components.LocalVsPlayerDetails
 import presentation.navigation.components.MultiplayerDetails
@@ -46,102 +51,131 @@ import resources.multiplayer
 @OptIn(KoinExperimentalAPI::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenMain(navController: NavHostController) {
-  val scope = rememberCoroutineScope()
-  val snackbarHostState = remember { SnackbarHostState() }
-  val sheetState = rememberModalBottomSheetState()
-  val vm = koinViewModel<ScreenMainViewModel>()
-  val defPlayer = vm.defaultPlayer.collectAsState(initial = null).value
-  val lastPlayer1 = vm.lastPlayer1.collectAsState(initial = null).value
-  val lastPlayer2 = vm.lastPlayer2.collectAsState(initial = null).value
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val sheetState = rememberModalBottomSheetState()
+    val vm = koinViewModel<ScreenMainViewModel>()
+    val defPlayer = vm.defaultPlayer.collectAsState(initial = null).value
+    val lastPlayer1 = vm.lastPlayer1.collectAsState(initial = null).value
+    val lastPlayer2 = vm.lastPlayer2.collectAsState(initial = null).value
 
-  Scaffold(
-    topBar = {
-      SettingsTopAppBar(stringResource(Res.string.app_name)) {
-        vm.showBottomSheet = !vm.showBottomSheet
-      }
-    },
-    modifier = Modifier.background(MaterialTheme.colorScheme.surface),
-    bottomBar = {
-      Row(
-        modifier = Modifier.fillMaxWidth().height(100.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.Bottom,
-      ) {
-        Image(painterResource(Res.drawable.ic_branding), null, Modifier.size(90.dp))
-      }
-    },
-    snackbarHost = { SnackbarHost(snackbarHostState) },
-  ) {
-    Column(
-      modifier = Modifier.fillMaxSize(),
-      horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = Arrangement.Center,
+    Scaffold(
+        topBar = {
+            SettingsTopAppBar(stringResource(Res.string.app_name)) {
+                vm.showBottomSheet = !vm.showBottomSheet
+            }
+        },
+        modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+        bottomBar = {
+            Row(
+                modifier = Modifier.fillMaxWidth().height(100.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.Bottom,
+            ) {
+                Image(painterResource(Res.drawable.ic_branding), null, Modifier.size(90.dp))
+            }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) {
-      OutlinedButton(
-        onClick = {
-          vm.showLocalVsComputerDetails = !vm.showLocalVsComputerDetails
-          vm.player1 = defPlayer?.value ?: ""
-          vm.multiplayerShowDetails = false
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            OutlinedButton(
+                onClick = {
+                    vm.showLocalVsComputerDetails = !vm.showLocalVsComputerDetails
+                    vm.player1 = defPlayer?.value ?: ""
+                    vm.multiplayerShowDetails = false
+                },
+            ) {
+                Text(stringResource(Res.string.local_vs_computer))
+            }
+
+            OutlinedButton(
+                onClick = {
+                    vm.showLocalVsPlayerDetails = !vm.showLocalVsPlayerDetails
+                    vm.player1 = lastPlayer1?.value ?: ""
+                    vm.player2 = lastPlayer2?.value ?: ""
+                    vm.multiplayerShowDetails = false
+                },
+            ) {
+                Text(stringResource(Res.string.local_vs_player))
+            }
+
+            OutlinedButton(onClick = { vm.multiplayerShowDetails = !vm.multiplayerShowDetails }) {
+                Text(stringResource(Res.string.multiplayer))
+            }
+
+            AnimatedVisibility(vm.multiplayerShowDetails) {
+                MultiplayerDetails(
+                    modifier = Modifier.padding(10.dp),
+                    navController = navController,
+                    scope = scope,
+                    snackbarHostState = snackbarHostState,
+                    vm = vm,
+                )
+            }
+
+            if (vm.showBottomSheet) {
+                SettingsBottomSheet(
+                    sheetState = sheetState,
+                    onDismissRequest = { vm.showBottomSheet = !vm.showBottomSheet },
+                )
+            }
+
+            if (vm.showLocalVsComputerDetails) {
+                LocalVsComputerDetails(
+                    modifier = Modifier.padding(10.dp),
+                    sheetState = sheetState,
+                    onDismissRequest = {
+                        vm.showLocalVsComputerDetails = !vm.showLocalVsComputerDetails
+                    },
+                    onClick = {
+                        vm.showLocalVsComputerDetails = !vm.showLocalVsComputerDetails
+                    },
+                    navController = navController,
+                    scope = scope,
+                    snackbarHostState = snackbarHostState,
+                    vm = vm,
+                )
+            }
+
+            if (vm.showLocalVsPlayerDetails) {
+                LocalVsPlayerDetails(
+                    modifier = Modifier.padding(10.dp),
+                    sheetState = sheetState,
+                    onDismissRequest = {
+                        vm.showLocalVsPlayerDetails = !vm.showLocalVsPlayerDetails
+                    },
+                    onClick = {
+                        vm.showLocalVsPlayerDetails = !vm.showLocalVsPlayerDetails
+                    },
+                    navController = navController,
+                    scope = scope,
+                    snackbarHostState = snackbarHostState,
+                    vm = vm,
+                )
+            }
+
+            if (getPlatform().name.contains("Web") && vm.showWebDisclaimerSnackbar) {
+                scope.launch {
+                    val result = snackbarHostState.showSnackbar(
+                        message = "Web version is still in development. Settings and Game Data will be lost on refresh.",
+                        actionLabel = "OK",
+                        duration = SnackbarDuration.Indefinite
+                    )
+                    when (result) {
+                        SnackbarResult.ActionPerformed -> {
+                            vm.showWebDisclaimerSnackbar = false
+                        }
+
+                        SnackbarResult.Dismissed -> {
+                            vm.showWebDisclaimerSnackbar = false
+                        }
+                    }
+                }
+            }
         }
-      ) {
-        Text(stringResource(Res.string.local_vs_computer))
-      }
-
-      OutlinedButton(
-        onClick = {
-          vm.showLocalVsPlayerDetails = !vm.showLocalVsPlayerDetails
-          vm.player1 = lastPlayer1?.value ?: ""
-          vm.player2 = lastPlayer2?.value ?: ""
-          vm.multiplayerShowDetails = false
-        }
-      ) {
-        Text(stringResource(Res.string.local_vs_player))
-      }
-
-      OutlinedButton(onClick = { vm.multiplayerShowDetails = !vm.multiplayerShowDetails }) {
-        Text(stringResource(Res.string.multiplayer))
-      }
-
-      AnimatedVisibility(vm.multiplayerShowDetails) {
-        MultiplayerDetails(
-          modifier = Modifier.padding(10.dp),
-          navController = navController,
-          scope = scope,
-          snackbarHostState = snackbarHostState,
-          vm = vm,
-        )
-      }
-
-      if (vm.showBottomSheet) {
-        SettingsBottomSheet(
-          sheetState = sheetState,
-          onDismissRequest = { vm.showBottomSheet = !vm.showBottomSheet },
-        )
-      }
-
-      if (vm.showLocalVsComputerDetails) {
-        LocalVsComputerDetails(
-          modifier = Modifier.padding(10.dp),
-          sheetState = sheetState,
-          onDismissRequest = { vm.showLocalVsComputerDetails = !vm.showLocalVsComputerDetails },
-          navController = navController,
-          scope = scope,
-          snackbarHostState = snackbarHostState,
-          vm = vm,
-        )
-      }
-
-      if (vm.showLocalVsPlayerDetails) {
-        LocalVsPlayerDetails(
-          modifier = Modifier.padding(10.dp),
-          sheetState = sheetState,
-          onDismissRequest = { vm.showLocalVsPlayerDetails = !vm.showLocalVsPlayerDetails },
-          navController = navController,
-          scope = scope,
-          snackbarHostState = snackbarHostState,
-          vm = vm,
-        )
-      }
     }
-  }
 }
