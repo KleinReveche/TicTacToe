@@ -3,5 +3,72 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
+    background-color: black;
     overflow: hidden;
+}
+
+#loading-indicator {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    background-color: #2b2d30;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 10px solid #f3f3f3;
+    border-top: 10px solid #4285F4;
+    border-radius: 50%;
+    width: 75px;
+    height: 75px;
+    animation: spin 1s linear infinite;
+}
+
+.tictactoe-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 85%;
+    max-width: 500px;
+    height: auto;
+}
+
+.tictactoe-icon img {
+    width: 100%;
+    height: auto;
+    animation: spinCounterClockwise 1s infinite;
+}
+
+.branding img {
+    width: 100%;
+    max-width: 182px;
+    height: auto;
+    margin-top: 20px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes spinCounterClockwise {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(-360deg); /* Spin in the opposite direction */
+    }
 }

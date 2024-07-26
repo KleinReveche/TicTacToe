@@ -2,12 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>TicTacToe</title>
     <link href="styles.css" rel="stylesheet" type="text/css">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <script src="TicTacToeApp.js" type="application/javascript"></script>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
 </head>
 <body>
+<div id="loading-indicator">
+    <div class="spinner">
+        <div class="tictactoe-icon">
+            <img src="images/tictactoe-icon.svg" alt="TicTacToe Icon">
+        </div>
+    </div>
+    <div class="branding">
+        <img src="images/kleinreveche.svg" alt="By Klein Reveche">
+    </div>
+</div>
+<script src="TicTacToeApp.js" type="application/javascript"></script>
+<script src="spinner.js" type="application/javascript"></script>
 </body>
 </html>
