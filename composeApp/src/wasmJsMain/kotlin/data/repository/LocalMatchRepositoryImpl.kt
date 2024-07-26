@@ -61,26 +61,32 @@ class LocalMatchRepositoryImpl(
         }
     }
 
-    override fun getMatchBetweenPlayers(player1: String, player2: String): Flow<LocalMatch?> = flow {
-        while (true) {
-            val localMatch = (0 until localStorage.length)
-                .mapNotNull { localStorage.key(it) }
-                .mapNotNull { key ->
-                    if (key.startsWith("LocalMatch: ")) {
-                        val localMatchJson = localStorage.getItem(key) ?: return@mapNotNull null
-                        Json.decodeFromString(LocalMatch.serializer(), localMatchJson)
-                    } else {
-                        null
+    override fun getMatchBetweenPlayers(player1: String, player2: String): Flow<LocalMatch?> =
+        flow {
+            while (true) {
+                val localMatch = (0 until localStorage.length)
+                    .mapNotNull { localStorage.key(it) }
+                    .mapNotNull { key ->
+                        if (key.startsWith("LocalMatch: ")) {
+                            val localMatchJson = localStorage.getItem(key) ?: return@mapNotNull null
+                            Json.decodeFromString(LocalMatch.serializer(), localMatchJson)
+                        } else {
+                            null
+                        }
                     }
-                }
-                .find { (it.player1 == player1 && it.player2 == player2) || (it.player1 == player2 && it.player2 == player1) }
-            emit(localMatch)
-            delay(delay)
+                    .find { (it.player1 == player1 && it.player2 == player2) || (it.player1 == player2 && it.player2 == player1) }
+                emit(localMatch)
+                delay(delay)
+            }
         }
-    }
 
     override suspend fun upsertLocalMatch(localMatch: LocalMatch) {
-        localStorage.setItem("LocalMatch: ${localMatch.id}", Json.encodeToString(LocalMatch.serializer(), localMatch))
+        val lastLocalMatchId = localStorage.getItem("lastLocalMatchId")?.toInt() ?: -1
+        localStorage.setItem(
+            "LocalMatch: ${lastLocalMatchId + 1}",
+            Json.encodeToString(LocalMatch.serializer(), localMatch.copy(id = lastLocalMatchId + 1))
+        )
+        localStorage.setItem("lastLocalMatchId", (lastLocalMatchId + 1).toString())
     }
 
     override suspend fun deleteLocalMatch(localMatch: LocalMatch) {

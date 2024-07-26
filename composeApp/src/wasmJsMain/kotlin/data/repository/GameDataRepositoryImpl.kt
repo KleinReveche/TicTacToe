@@ -14,7 +14,12 @@ class GameDataRepositoryImpl(
     private val delay: Long = 5000L
 
     override suspend fun upsertGameData(gameData: GameData) {
-        localStorage.setItem("GameData: ${gameData.id}", Json.encodeToString(GameData.serializer(), gameData))
+        val lastGameId = localStorage.getItem("lastGameDataId")?.toInt() ?: -1
+        localStorage.setItem(
+            "GameData: ${lastGameId + 1}",
+            Json.encodeToString(GameData.serializer(), gameData.copy(id = lastGameId + 1))
+        )
+        localStorage.setItem("lastGameDataId", (lastGameId + 1).toString())
     }
 
     override suspend fun deleteGameData(gameData: GameData) {
