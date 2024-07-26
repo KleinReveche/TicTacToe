@@ -19,7 +19,6 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -161,8 +160,8 @@ fun ScreenMain(navController: NavHostController) {
             if (getPlatform().name.contains("Web") && vm.showWebDisclaimerSnackbar) {
                 scope.launch {
                     val result = snackbarHostState.showSnackbar(
-                        message = "Web version is still in development. Settings and Game Data will be lost on refresh.",
-                        actionLabel = "OK",
+                        message = "Web version is still in development. Features may not work as expected.",
+                        actionLabel = "I UNDERSTAND",
                         duration = SnackbarDuration.Indefinite
                     )
                     when (result) {

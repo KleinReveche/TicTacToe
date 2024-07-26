@@ -1,17 +1,10 @@
 package di
 
-import data.repository.AppSettingRepositoryTempImpl
-import data.repository.GameDataRepositoryTempImpl
-import data.repository.LocalMatchRepositoryTempImpl
-import data.repository.LocalPlayerRepositoryTempImpl
-import data.sources.tempAppSettings
-import data.sources.tempGameData
-import data.sources.tempLocalMatches
-import data.sources.tempLocalPlayers
-import domain.model.AppSetting
-import domain.model.GameData
-import domain.model.LocalMatch
-import domain.model.LocalPlayer
+import data.repository.AppSettingRepositoryImpl
+import data.repository.GameDataRepositoryImpl
+import data.repository.LocalMatchRepositoryImpl
+import data.repository.LocalPlayerRepositoryImpl
+import data.sources.localStorage
 import domain.repository.AppSettingRepository
 import domain.repository.GameDataRepository
 import domain.repository.LocalMatchRepository
@@ -19,15 +12,13 @@ import domain.repository.LocalPlayerRepository
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import org.w3c.dom.Storage
 
 actual val ticTacToeDatabasePlatformModule = module {
-    single { tempAppSettings }.bind<List<AppSetting>>()
-    single { tempGameData }.bind<List<GameData>>()
-    single { tempLocalMatches }.bind<List<LocalMatch>>()
-    single { tempLocalPlayers }.bind<List<LocalPlayer>>()
+    single { localStorage }.bind<Storage>()
 
-    singleOf(::LocalPlayerRepositoryTempImpl).bind<LocalPlayerRepository>()
-    singleOf(::GameDataRepositoryTempImpl).bind<GameDataRepository>()
-    singleOf(::AppSettingRepositoryTempImpl).bind<AppSettingRepository>()
-    singleOf(::LocalMatchRepositoryTempImpl).bind<LocalMatchRepository>()
+    singleOf(::AppSettingRepositoryImpl).bind<AppSettingRepository>()
+    singleOf(::GameDataRepositoryImpl).bind<GameDataRepository>()
+    singleOf(::LocalMatchRepositoryImpl).bind<LocalMatchRepository>()
+    singleOf(::LocalPlayerRepositoryImpl).bind<LocalPlayerRepository>()
 }
