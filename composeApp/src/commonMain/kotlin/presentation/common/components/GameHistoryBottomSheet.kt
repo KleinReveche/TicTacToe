@@ -100,7 +100,6 @@ fun GameHistoryBottomSheet(
         AnimatedVisibility(showGameDetails) {
             val selectedItem = gameData[selectedIndex]
             val winningMoves = LocalGameEngine.isGameWon(selectedItem.board, PLAYER_X).winningMoves
-            val formattedDate = selectedItem.date.toDefaultFormat()
             val winner =
                 when {
                     selectedItem.player1Won -> selectedItem.player1Name + " won!"
@@ -132,7 +131,7 @@ fun GameHistoryBottomSheet(
                     Column(modifier = Modifier.padding(10.dp)) {
                         Text("Game Details:", textAlign = TextAlign.Center, fontSize = 18.sp)
                         Spacer(modifier = Modifier.height(5.dp))
-                        Text(formattedDate, fontSize = 15.sp)
+                        Text(selectedItem.date.toDefaultFormat(), fontSize = 15.sp)
                         Text("Player 1 - ${selectedItem.player1Name}", fontSize = 16.sp)
                         Text("Player 2 - ${selectedItem.player2Name}", fontSize = 16.sp)
                         Spacer(modifier = Modifier.height(5.dp))

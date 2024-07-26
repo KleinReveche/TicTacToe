@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 class ScreenMainViewModel(
     private val appSettingRepository: AppSettingRepository,
-    private val localVsPlayerRepository: LocalPlayerRepository,
+    private val localPlayerRepository: LocalPlayerRepository,
 ) : ViewModel() {
     val defaultPlayer = appSettingRepository.getAppSetting(AppSettings.LAST_PLAYER_VS_COMPUTER)
     val lastPlayer1 = appSettingRepository.getAppSetting(AppSettings.LAST_PLAYER_1)
@@ -45,8 +45,8 @@ class ScreenMainViewModel(
         playerName: String,
     ) {
         scope.launch {
-            if (localVsPlayerRepository.playerExists(playerName)) return@launch
-            localVsPlayerRepository.upsertPlayer(LocalPlayer(playerName))
+            if (localPlayerRepository.playerExists(playerName)) return@launch
+            localPlayerRepository.upsertPlayer(LocalPlayer(playerName))
         }
     }
 }

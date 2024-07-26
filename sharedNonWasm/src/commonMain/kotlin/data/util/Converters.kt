@@ -13,9 +13,9 @@ import kotlinx.datetime.Instant
 
 object Converters {
 
-  @TypeConverter fun fromTimestamp(value: Long) = Instant.fromEpochMilliseconds(value)
+  @TypeConverter fun fromTimestamp(value: String) = Instant.parse(value)
 
-  @TypeConverter fun dateToTimestamp(date: Instant) = date.toEpochMilliseconds()
+  @TypeConverter fun dateToTimestamp(date: Instant) = date.toString()
 
   @TypeConverter
   fun boardToString(board: Array<Char?>): String {

@@ -3,6 +3,8 @@ package presentation.navigation.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -49,7 +51,11 @@ fun LocalVsComputerDetails(
     snackbarHostState: SnackbarHostState,
     vm: ScreenMainViewModel,
 ) {
-    ModalBottomSheet(onDismissRequest = onDismissRequest, sheetState = sheetState) {
+    ModalBottomSheet(
+        onDismissRequest = onDismissRequest,
+        sheetState = sheetState,
+        contentWindowInsets = { WindowInsets.ime }
+    ) {
         val computerDifficultyTypes =
             arrayOf(
                 stringResource(Res.string.easy),
@@ -90,6 +96,7 @@ fun LocalVsComputerDetails(
                             scope,
                             AppSetting(AppSettings.LAST_PLAYER_VS_COMPUTER, vm.player1),
                         )
+                        vm.upsertPlayer(scope, vm.player1)
 
                         navController.navigate(
                             ScreenLocalVsComputer(
