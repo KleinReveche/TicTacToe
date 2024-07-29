@@ -19,10 +19,18 @@ object LocalGameEngine {
         return newBoard
     }
 
-    /** Chooses a random empty cell as an easy move for the computer */
-    fun computerMoveEasy(board: Array<Char?>): Int {
-        val emptyCells = board.indices.filter { board[it] == null }
-        return if (emptyCells.isEmpty()) -1 else emptyCells.random()
+    /**
+     * Chooses a normal move but with a 50% chance for a random move.
+     */
+    fun computerMoveEasy(board: Array<Char?>, computerPlayerType: Char): Int {
+        val randomChance = (1..100).random()
+
+        if (randomChance <= 50) {
+            val emptyCells = board.indices.filter { board[it] == null }
+            return if (emptyCells.isEmpty()) -1 else emptyCells.random()
+        } else {
+            return computerMoveNormal(board, computerPlayerType)
+        }
     }
 
     /**
