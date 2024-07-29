@@ -48,11 +48,10 @@ class ScreenLocalVsComputerViewModel(
                 ComputerDifficulty.Easy -> LocalGameEngine.computerMoveEasy(board, computerPlayerType)
                 ComputerDifficulty.Normal -> LocalGameEngine.computerMoveNormal(board, computerPlayerType)
                 ComputerDifficulty.Insane ->
-                    if (board.contentEquals(Array<Char?>(9) { null }) || roundCount == 1) {
-                        LocalGameEngine.computerMoveEasy(board)
+                    if (board.contentEquals(Array<Char?>(9) { null })) {
                         LocalGameEngine.computerMoveEasy(board, computerPlayerType)
                     } else {
-                        LocalGameEngine.computerMoveHard(board)
+                        LocalGameEngine.computerMoveInsane(board, computerPlayerType)
                     }
             }
 

@@ -75,17 +75,16 @@ object LocalGameEngine {
     }
 
     /** Chooses a move for the computer based on the minimax algorithm to make the computer win. */
-    fun computerMoveHard(board: Array<Char?>): Int {
+    fun computerMoveInsane(board: Array<Char?>, computerPlayerType: Char): Int {
+        val opponentPlayerType = if (computerPlayerType == PLAYER_X) PLAYER_O else PLAYER_X
         var bestScore = Int.MIN_VALUE
         var bestMove = -1
 
-        for (i in 0 until board.count()) {
+        for (i in board.indices) {
             if (board[i] == null) {
-                board[i] = PLAYER_O
-
-                val score = minimaxAlgorithm(board, false)
+                board[i] = computerPlayerType
+                val score = minimaxAlgorithm(board, false, computerPlayerType, opponentPlayerType)
                 board[i] = null
-
                 if (score > bestScore) {
                     bestScore = score
                     bestMove = i
@@ -99,67 +98,65 @@ object LocalGameEngine {
     private fun minimaxAlgorithm(
         board: Array<Char?>,
         isMaximizing: Boolean,
+        computerPlayerType: Char,
+        opponentPlayerType: Char
     ): Int {
-        if (isGameWon(board, PLAYER_X).isGameWon) {
-            return -1 // Player X wins
-        } else if (isGameWon(board, PLAYER_O).isGameWon) {
-            return 1 // Player O wins
+        val winResultX = isGameWon(board, PLAYER_X)
+        val winResultO = isGameWon(board, PLAYER_O)
+
+        if (winResultX.isGameWon) {
+            return if (computerPlayerType == PLAYER_X) 1 else -1
+        } else if (winResultO.isGameWon) {
+            return if (computerPlayerType == PLAYER_O) 1 else -1
         } else if (isBoardFull(board)) {
-            return 0 // It's a tie
+            return 0
         }
 
-        if (isMaximizing) {
+        return if (isMaximizing) {
             var bestScore = Int.MIN_VALUE
-            for (i in 0 until board.count()) {
+            for (i in board.indices) {
                 if (board[i] == null) {
-                    board[i] = PLAYER_O
-                    val score = minimaxAlgorithm(board, false)
+                    board[i] = computerPlayerType
+                    val score = minimaxAlgorithm(board, false, computerPlayerType, opponentPlayerType)
                     board[i] = null
                     bestScore = maxOf(bestScore, score)
                 }
             }
-            return bestScore
+            bestScore
         } else {
             var bestScore = Int.MAX_VALUE
-            for (i in 0 until board.count()) {
+            for (i in board.indices) {
                 if (board[i] == null) {
-                    board[i] = PLAYER_X
-                    val score = minimaxAlgorithm(board, true)
+                    board[i] = opponentPlayerType
+                    val score = minimaxAlgorithm(board, true, computerPlayerType, opponentPlayerType)
                     board[i] = null
                     bestScore = minOf(bestScore, score)
                 }
             }
-            return bestScore
+            bestScore
         }
     }
 
-    fun isGameWon(
-        board: Array<Char?>,
-        player: Char,
-    ): WinResult {
-        val winningIndices = mutableListOf<Int>()
-        val winningMoves =
-            listOf(
-                listOf(0, 1, 2),
-                listOf(3, 4, 5),
-                listOf(6, 7, 8),
-                listOf(0, 3, 6),
-                listOf(1, 4, 7),
-                listOf(2, 5, 8),
-                listOf(2, 4, 6),
-                listOf(0, 4, 8),
-            )
+    fun isGameWon(board: Array<Char?>, player: Char): WinResult {
+        val winningMoves = listOf(
+            listOf(0, 1, 2),
+            listOf(3, 4, 5),
+            listOf(6, 7, 8),
+            listOf(0, 3, 6),
+            listOf(1, 4, 7),
+            listOf(2, 5, 8),
+            listOf(0, 4, 8),
+            listOf(2, 4, 6)
+        )
 
+        val winningIndices = mutableListOf<Int>()
         for (move in winningMoves) {
             val (a, b, c) = move
-            if (board[a] == board[b] && board[b] == board[c] && board[a] != null) {
+            if (board[a] == player && board[a] == board[b] && board[b] == board[c]) {
                 winningIndices.addAll(move)
             }
         }
 
-        return WinResult(
-            winningMoves.any { move -> move.all { board[it] == player } },
-            winningIndices,
-        )
+        return WinResult(winningIndices.isNotEmpty(), winningIndices)
     }
 }
