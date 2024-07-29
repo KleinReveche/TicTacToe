@@ -36,22 +36,23 @@ object LocalGameEngine {
     /**
      * Chooses a random move for the computer based on the order of priority to make the computer win.
      */
-    fun computerMoveNormal(board: Array<Char?>): Int {
+    fun computerMoveNormal(board: Array<Char?>, computerPlayerType: Char): Int {
         // check if computer can win in this move
         for (i in 0 until board.count()) {
             val copy = copyBoard(board)
-            if (copy[i] == null) copy[i] = PLAYER_O
+            if (copy[i] == null) copy[i] = computerPlayerType
 
             // check for win
-            if (isGameWon(copy, PLAYER_O).isGameWon) return i
+            if (isGameWon(copy, computerPlayerType).isGameWon) return i
         }
 
         // check if player could win in the next move
+        val opponentPlayerType = if (computerPlayerType == PLAYER_X) PLAYER_O else PLAYER_X
         for (i in 0 until board.count()) {
             val copy = copyBoard(board)
-            if (copy[i] == null) copy[i] = PLAYER_X
+            if (copy[i] == null) copy[i] = opponentPlayerType
 
-            if (isGameWon(copy, PLAYER_X).isGameWon) return i
+            if (isGameWon(copy, opponentPlayerType).isGameWon) return i
         }
 
         // try to make corners if it is free
