@@ -115,7 +115,6 @@ fun ScreenLocalVsComputer(
             verticalArrangement = Arrangement.Center,
         ) {
             StatCounter(
-                modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 16.dp),
                 player1Name = player1Name,
                 player2Name = player2Name,
                 currentPlayer = vm.currentPlayer,
