@@ -9,13 +9,14 @@ import domain.repository.AppSettingRepository
 import domain.repository.LocalPlayerRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 class NavigationViewModel(
     private val appSettingRepository: AppSettingRepository,
     private val localPlayerRepository: LocalPlayerRepository,
 ) : ViewModel() {
-    @OptIn(ExperimentalStdlibApi::class)
+    @OptIn(ExperimentalUuidApi::class)
     fun saveDeviceIdentifier() {
         viewModelScope.launch {
             if (

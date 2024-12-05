@@ -1,7 +1,9 @@
 package data.sources
 
+import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
 import data.util.Converters
 import domain.model.AppSettingRoom
@@ -13,10 +15,13 @@ import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.div
 
+expect object TicTacToeDatabaseCtor : RoomDatabaseConstructor<TicTacToeDatabase>
+
 @Database(
   entities = [LocalPlayerRoom::class, GameDataRoom::class, AppSettingRoom::class, LocalMatchRoom::class],
   version = 1,
 )
+@ConstructedBy(TicTacToeDatabaseCtor::class)
 @TypeConverters(Converters::class)
 abstract class TicTacToeDatabase : RoomDatabase() {
   abstract fun localPlayerDao(): LocalPlayerDao

@@ -49,6 +49,9 @@ kotlin {
             implementation(libs.oshi.core)
             implementation(libs.slf4j.simple)
         }
+        wasmJsMain.dependencies {
+            implementation(libs.kotlinx.browser)
+        }
     }
 }
 

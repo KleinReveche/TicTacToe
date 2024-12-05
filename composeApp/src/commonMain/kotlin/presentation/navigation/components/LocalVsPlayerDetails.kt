@@ -2,7 +2,10 @@ package presentation.navigation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -22,6 +25,7 @@ import domain.model.AppSettings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import platform.getPlatform
 import presentation.common.components.Header
 import presentation.navigation.ScreenLocalVsPlayer
 import presentation.navigation.ScreenMainViewModel
@@ -100,6 +104,10 @@ fun LocalVsPlayerDetails(
                 },
             ) {
                 Text("Play")
+            }
+
+            if (getPlatform().name.contains("Android")) {
+                Spacer(Modifier.fillMaxWidth().height(100.dp))
             }
         }
     }

@@ -12,11 +12,13 @@ import io.ktor.websocket.Frame
 import io.ktor.websocket.close
 import io.ktor.websocket.readText
 import java.time.Duration
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 fun Application.configureSockets() {
     install(WebSockets) {
-        pingPeriod = Duration.ofSeconds(15)
-        timeout = Duration.ofSeconds(15)
+        pingPeriod = 15.toDuration(DurationUnit.SECONDS)
+        timeout = 15.toDuration(DurationUnit.SECONDS)
         maxFrameSize = Long.MAX_VALUE
         masking = false
     }
