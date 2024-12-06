@@ -1,7 +1,7 @@
 package com.kleinreveche.tictactoe
 
 import android.app.Application
-import di.initKoin
+import com.kleinreveche.tictactoe.di.initKoin
 import org.koin.android.ext.koin.androidContext
 
 class TicTacToeApp : Application() {

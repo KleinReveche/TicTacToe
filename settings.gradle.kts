@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 rootProject.name = "TicTacToe"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
@@ -27,7 +25,6 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
-        maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
     }
 }
 
