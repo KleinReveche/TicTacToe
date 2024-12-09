@@ -11,6 +11,7 @@ import androidx.navigation.toRoute
 import org.koin.compose.viewmodel.koinViewModel
 import com.kleinreveche.tictactoe.presentation.localvscomputer.ScreenLocalVsComputer
 import com.kleinreveche.tictactoe.presentation.localvsplayer.ScreenLocalVsPlayer
+import com.kleinreveche.tictactoe.presentation.multiplayer.ScreenMultiplayer
 
 @Composable
 fun Navigation() {
@@ -75,6 +76,8 @@ fun Navigation() {
                     AnimatedContentTransitionScope.SlideDirection.End, tween(700)
                 )
             },
-        ) {}
+        ) {
+            ScreenMultiplayer(navController)
+        }
     }
 }

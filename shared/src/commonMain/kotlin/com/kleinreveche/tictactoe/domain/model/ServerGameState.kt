@@ -3,10 +3,10 @@ package com.kleinreveche.tictactoe.domain.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RoomGameState (
+data class ServerGameState (
     val currentPlayerConnectedChar: Char? = PLAYER_X,
     val currentPlayerAtTurn: Char? = PLAYER_X,
-    val state: GameState = GameState(),
+    val gameState: GameState = GameState(),
     val playerXWins: Int = 0,
     val playerOWins: Int = 0,
     val draws: Int = 0,

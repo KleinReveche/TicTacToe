@@ -12,6 +12,7 @@ data class GameState(
     val board: Array<Char?> = Array(9) { null },
     val winningPlayer: Char? = null,
     val isBoardFull: Boolean = false,
+    val winningMoves: List<Int> = emptyList(),
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -94,15 +94,27 @@ kotlin {
             implementation(libs.navigation.compose)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.material3.window.size)
+
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.http.cio)
+            implementation(libs.ktor.client.websockets)
         }
 
         desktopMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
             implementation(projects.sharedNonWasm)
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
             implementation(libs.kotlinx.coroutines.swing)
+        }
+
+        iosMain.dependencies {
+            //implementation(projects.sharedNonWasm)
+        }
+
+        wasmJsMain.dependencies {
         }
     }
 }
@@ -141,6 +153,11 @@ dependencies {
 compose.desktop {
     application {
         mainClass = "com.kleinreveche.tictactoe.MainKt"
+
+        buildTypes.release.proguard {
+            version.set("7.6.0")
+            configurationFiles.from("proguard-rules.pro")
+        }
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Exe, TargetFormat.Deb)

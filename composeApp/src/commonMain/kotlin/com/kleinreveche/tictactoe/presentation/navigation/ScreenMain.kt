@@ -101,10 +101,11 @@ fun ScreenMain(navController: NavHostController) {
                 Text(stringResource(Res.string.local_vs_player))
             }
 
-            OutlinedButton(onClick = { vm.multiplayerShowDetails = !vm.multiplayerShowDetails }) {
+            OutlinedButton(onClick = { navController.navigate(ScreenMultiplayer) }) {
                 Text(stringResource(Res.string.multiplayer))
             }
 
+            // TODO: REMOVE THIS
             AnimatedVisibility(vm.multiplayerShowDetails) {
                 MultiplayerDetails(
                     modifier = Modifier.padding(10.dp),
